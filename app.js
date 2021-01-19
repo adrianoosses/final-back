@@ -3,6 +3,7 @@ const mysql = require('mysql2/promise');
 const app = express();
 //let ap = require('./routes/appointment.js');
 let us = require('./routes/user.js');
+let product = require('./routes/product.js');
 let cors = require('cors');
 
 
@@ -16,6 +17,7 @@ app.use(cors());
 
 //app.use('/appointment', ap.routes);
 app.use('/user', us.routes);
+app.use('/product', product.routes);
 app.get('/', (req, res) => res.send('Welcome'));
 
 app.listen(PORT, () => console.log(`Server running ${PORT}`));

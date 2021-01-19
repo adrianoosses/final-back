@@ -10,7 +10,7 @@
 ## SET UP
 <a name="db"></a>
 ## DATA BASE
-![Database](images/diagram3.svg)
+![Database](images/diagram4.svg)
 <a name="run"></a>
 ## RUN
 
