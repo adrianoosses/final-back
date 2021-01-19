@@ -17,6 +17,9 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
+      password: {
+        type: Sequelize.STRING
+      },
       role: {
         type: Sequelize.ENUM('Admin', 'Client')
       },
@@ -30,7 +33,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       card: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
       createdAt: {
         allowNull: false,

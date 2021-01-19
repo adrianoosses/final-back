@@ -17,11 +17,12 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     lastName: DataTypes.STRING,
     email: DataTypes.STRING,
+    password: DataTypes.STRING,
     role: DataTypes.ENUM('Admin', 'Client'),
     birthDate: DataTypes.DATE,
     address: DataTypes.STRING,
     phone: DataTypes.INTEGER,
-    card: DataTypes.INTEGER
+    card: DataTypes.BIGINT
   }, {
     sequelize,
     modelName: 'User',
