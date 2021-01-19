@@ -11,15 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.User);
     }
   };
   Product.init({
-    userId: DataTypes.INTEGER,
+    buyerId: DataTypes.INTEGER,
     title: DataTypes.STRING,
     description: DataTypes.STRING,
-    photo: DataTypes.STRING,
-    price: DataTypes.DOUBLE
+    price: DataTypes.DOUBLE,
+    sellDate: DataTypes.DATE,
+    productStatus: DataTypes.ENUM('New', 'Used')
   }, {
     sequelize,
     modelName: 'Product',

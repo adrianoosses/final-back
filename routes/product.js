@@ -9,11 +9,4 @@ const {addProduct, getProducts} = require('../controllers/Product.js');
 router.post('/', addProduct);
 router.get('/', getProducts);
 
-// Endpoint de Perfil (R)read -> GET
-//router.get('/', getUsers);
-//router.get('/profile', getProfile);
-//router.put('/', changeUser);
-
-// Endpoint de Baja de usuario (D) -> DELETE
-//router.delete('/:id', isAdmin, deleteUserByName);
 exports.routes = router;

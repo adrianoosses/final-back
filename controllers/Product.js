@@ -17,30 +17,38 @@ let getProductByUserId = async(userId) =>{
     return product;   
 }
 
+let getProductId = async(id) =>{
+    let q = `SELECT * FROM PRODUCTS WHERE id='${id}'`
+    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
+    console.log("products",product);
+    return product;   
+}
+
 exports.getProducts = async(req, res) => {
     let products = "";
     try{
-        if(req.query.userid) products = await getAllProducts(req.query.userid);
-        else products = await getAllProducts(req, res);
+        products = await getAllProducts(req, res);
         console.log("product: ", products);
         res.json(products);
         return true;
     }catch{
-        res.status(400).json({"Errordd":products});
+        res.status(400).json({"Error":products});
         return false;
     } 
 }
 
-exports.addProduct = (req, res) =>{
+exports.addProduct = async (req, res) =>{
     let msg = '';
-    let {userId, title, description, photo, price, createdAt, updatedAt} = req.body;
-    let q = `INSERT INTO PRODUCTS (userId, title, price, description, photo, createdAt, updatedAt)
-        VALUES ('${userId}', '${title}', '${price}', '${description}', '${photo}', '${createdAt}', '${updatedAt}')`;
+    let {buyerId, title, description, price, sellDate, productStatus, createdAt, updatedAt} = req.body;
+    let q = `INSERT INTO PRODUCTS (buyerId, title, price, description, sellDate, 
+        productStatus, createdAt, updatedAt)
+        VALUES ('${buyerId}','${title}', '${price}', '${description}', '${sellDate}',  
+        '${productStatus}', '${createdAt}', '${updatedAt}')`;
     try{
         msg = 'Product added.';
-        sequelize.query(q, {type: sequelize.QueryTypes.INSERT})
+        await sequelize.query(q, {type: sequelize.QueryTypes.INSERT})
         res.status(200)
-        .json({message:"Good" + msg});
+        .json({message:"Good: " + msg});
     }catch{
         res.status(400)
         .json({error:"Wrong"});
