@@ -44,7 +44,10 @@ exports.signUp = (req, res) =>{
 };
 
 let getUserByEmail = async(req, res) =>{
-    let {email} = req.body;
+    let email = '';
+    //let {email} = req.body;
+    if(req.body.email) email = req.body.email;
+    if(req.query.email) email = req.query.email;
     console.log("getting user by email");
     let q = `SELECT * FROM USERS WHERE email='${email}'`;
     return sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
@@ -57,6 +60,20 @@ let generateToken = (user)=>{
     }
     // console.log("email: " + newUser.email);
     return jwt.sign(newUser, claveToken, {expiresIn: 60 * 60 * 24})
+}
+
+exports.getUsers = async(req, res) => {
+    let user = "";
+    try{
+        if(req.query.email || req.query.email) user = await getUserByEmail(req, res);
+        else user = await getAllUsers(req, res);
+        console.log("user: ", user);
+        res.json(user);
+        return true;
+    }catch{
+        res.status(400).json({"Error":user});
+        return false;
+    } 
 }
 
 exports.login = async(req, res) =>{

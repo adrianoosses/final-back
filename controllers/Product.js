@@ -12,10 +12,12 @@ let getAllProducts = async(req, res) =>{
 
 let getAllProductPrev = async(req, res) => {
     let q = `
-        SELECT title, price, img.path
+        SELECT title, price, description, sellDate, productStatus, img.path, usr.name
         FROM PRODUCTS
-        INNER JOIN IMAGES AS img
-        ON products.id = img.productId; `
+        JOIN IMAGES AS img
+        ON products.id = img.productId
+        JOIN USERS as usr
+        ON products.buyerId = usr.id; `
     let products = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT});
     return products;
 }
@@ -34,10 +36,22 @@ let getProductId = async(id) =>{
     return product;   
 }
 
+let getProductByUserEmail = async(email) =>{
+    let q = `SELECT * 
+            FROM PRODUCTS
+            INNER JOIN USERS
+            ON products.buyerId = users.id
+            WHERE users.email='${email}';`
+    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
+    console.log("products",product);
+    return product;   
+}
+
 exports.getProducts = async(req, res) => {
     let products = "";
     try{
-        products = await getAllProductPrev(req, res);
+        if(req.query.email) products = await getProductByUserEmail(req.query.email);
+        else products = await getAllProductPrev(req, res);
         console.log("product: ", products);
         res.json(products);
         return true;
