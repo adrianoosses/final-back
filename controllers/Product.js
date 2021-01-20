@@ -12,7 +12,7 @@ let getAllProducts = async(req, res) =>{
 
 let getAllProductPrev = async(req, res) => {
     let q = `
-        SELECT title, price, description, sellDate, productStatus, img.path, usr.name
+        SELECT title, price, description, sellDate, productStatus, img.path, usr.name, usr.email
         FROM PRODUCTS
         JOIN IMAGES AS img
         ON products.id = img.productId

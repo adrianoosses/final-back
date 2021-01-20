@@ -7,6 +7,7 @@ let product = require('./routes/product.js');
 let order = require('./routes/order.js');
 let chat = require('./routes/chat.js');
 let image = require('./routes/image.js');
+let userScore = require('./routes/userScore.js');
 
 let cors = require('cors');
 
@@ -25,6 +26,7 @@ app.use('/product', product.routes);
 app.use('/order', order.routes);
 app.use('/chat', chat.routes);
 app.use('/image', image.routes);
+app.use('/userscore', userScore.routes);
 
 app.get('/', (req, res) => res.send('Welcome'));
 
