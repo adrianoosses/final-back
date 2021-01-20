@@ -11,10 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.Product);
     }
   };
   Image.init({
-    product_id: DataTypes.INTEGER,
+    productId: DataTypes.INTEGER,
     path: DataTypes.STRING
   }, {
     sequelize,

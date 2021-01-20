@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     card: DataTypes.BIGINT
   }, {
     sequelize,
-    modelName: 'User',
+    timestamps: false,
+    modelName: 'User'
   });
   return User;
 };

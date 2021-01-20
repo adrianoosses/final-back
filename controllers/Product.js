@@ -10,6 +10,16 @@ let getAllProducts = async(req, res) =>{
     return product;   
 }
 
+let getAllProductPrev = async(req, res) => {
+    let q = `
+        SELECT title, price, img.path
+        FROM PRODUCTS
+        INNER JOIN IMAGES AS img
+        ON products.id = img.productId; `
+    let products = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT});
+    return products;
+}
+
 let getProductByUserId = async(userId) =>{
     let q = `SELECT * FROM PRODUCTS WHERE userId='${userId}'`
     let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
@@ -27,7 +37,7 @@ let getProductId = async(id) =>{
 exports.getProducts = async(req, res) => {
     let products = "";
     try{
-        products = await getAllProducts(req, res);
+        products = await getAllProductPrev(req, res);
         console.log("product: ", products);
         res.json(products);
         return true;

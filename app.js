@@ -6,12 +6,13 @@ let us = require('./routes/user.js');
 let product = require('./routes/product.js');
 let order = require('./routes/order.js');
 let chat = require('./routes/chat.js');
+let image = require('./routes/image.js');
 
 let cors = require('cors');
 
 
 // asignacion del puerto 3000 para el servidor
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
 //CORS
@@ -23,6 +24,7 @@ app.use('/user', us.routes);
 app.use('/product', product.routes);
 app.use('/order', order.routes);
 app.use('/chat', chat.routes);
+app.use('/image', image.routes);
 
 app.get('/', (req, res) => res.send('Welcome'));
 
