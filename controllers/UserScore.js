@@ -3,10 +3,12 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
-let getScores = async(buyerId) =>{
-    let q = `SELECT AVG(uScore) 
-        FROM USERSCORES 
-        WHERE userId='${buyerId}'`
+let getScoresByEmail = async(buyerEmail) =>{
+    let q = `SELECT AVG(uScore) as score
+    FROM USERSCORES 
+    INNER JOIN USERS
+    ON users.id = userscores.userId
+    WHERE users.email='${buyerEmail}';`
     let score = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
     console.log("score", score);
     return score;   
@@ -17,7 +19,7 @@ exports.getScore = async(req, res) => {
     try{
         //if(req.query.userid) orders = await getProductToSellByUserId(req.query.userid);
         //else 
-        const score = await getScores(req.query.email);
+        const score = await getScoresByEmail(req.query.email);
         console.log("score: ", score);
         res.json(score);
         return true;
