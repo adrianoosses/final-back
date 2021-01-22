@@ -26,6 +26,9 @@ module.exports = {
       productStatus: {
         type: Sequelize.ENUM('New', 'Used')
       },
+      category: {
+        type: Sequelize.ENUM('Book', 'Multimedia', 'Videogame', 'Home', 'Fashion', 'Vehicle')
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
