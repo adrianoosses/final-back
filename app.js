@@ -8,6 +8,7 @@ let order = require('./routes/order.js');
 let chat = require('./routes/chat.js');
 let image = require('./routes/image.js');
 let userScore = require('./routes/userScore.js');
+let offer = require('./routes/offer.js');
 
 let cors = require('cors');
 
@@ -22,6 +23,7 @@ app.use(cors());
 
 //app.use('/appointment', ap.routes);
 app.use('/user', us.routes);
+app.use('/offer', offer.routes);
 app.use('/product', product.routes);
 app.use('/order', order.routes);
 app.use('/chat', chat.routes);
