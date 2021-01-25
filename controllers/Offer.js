@@ -4,9 +4,15 @@ let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
 let getOffersProductId = async(productId) =>{
-    let q = `SELECT sellerId, productId, offerValue, offers.createdAt, offers.updatedAt
+    let q = `SELECT users.email, products.title, offerValue, offers.createdAt, offers.updatedAt
     FROM OFFERS
-    WHERE productId = "${productId}";`
+    INNER JOIN PRODUCTS
+    ON offers.productId = products.id
+    INNER JOIN USERS
+    ON offers.sellerId = users.id
+    WHERE productId = "${productId}"
+    ORDER BY offerValue DESC
+    ;`
     let offer = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
     console.log("offer", offer);
     return offer;   
@@ -15,7 +21,8 @@ let getOffersProductId = async(productId) =>{
 exports.getOffer = async(req, res) => {
     let score = "";
     try{
-        const offer = await getOffersProductId(req.query.product);
+        console.log("product id ", req.query.productid);
+        const offer = await getOffersProductId(req.query.productid);
         console.log("offer: ", offer);
         res.json(offer);
         return true;
@@ -27,12 +34,12 @@ exports.getOffer = async(req, res) => {
 
 exports.setOffer = async(req, res) =>{
     let msg = '';
-    let {sellerEmail, productId, offerValue, createdAt, updatedAt} = req.body;
+    let {userEmail, productId, offerValue, createdAt, updatedAt} = req.body;
     let q = `
     INSERT INTO OFFERS (sellerId, productId, offerValue, createdAt, updatedAt)
     VALUES((SELECT id
     FROM USERS
-    WHERE users.email = '${sellerEmail}'
+    WHERE users.email = '${userEmail}'
     ), '${productId}', '${offerValue}', '${createdAt}', '${updatedAt}')`;
     
     try{

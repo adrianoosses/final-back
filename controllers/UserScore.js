@@ -20,6 +20,7 @@ exports.getScore = async(req, res) => {
         //if(req.query.userid) orders = await getProductToSellByUserId(req.query.userid);
         //else 
         const score = await getScoresByEmail(req.query.email);
+        console.log("email score:",req.query.email);
         console.log("score: ", score);
         res.json(score);
         return true;

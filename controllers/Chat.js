@@ -36,10 +36,22 @@ exports.getOrders = async(req, res) => {
 */
 
 let getChatByDestination = async(source, destination) =>{
-    let q = `SELECT * FROM CHATS 
-    WHERE (source=${source} AND destination=${destination}) OR
-    (source=${destination} AND destination=${source})`;
-    let chats = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
+    let q = `SELECT id, sourceemail, destinationemail, chatDate, message
+    FROM 
+    (SELECT chats.id, src.email as sourceemail, dst.email destinationemail, chats.chatDate, message
+    FROM CHATS
+    JOIN USERS as src
+    ON CHATS.SOURCE = src.ID
+    JOIN USERS as dst
+    ON CHATS.destination = dst.ID
+    WHERE (src.email=? AND dst.email=?) OR (src.email=? AND dst.email=?)
+    ORDER BY chats.id DESC
+    LIMIT 8) as table2
+    ORDER BY table2.id ASC
+    ;`;
+    let chats = await sequelize.query(q, 
+        {replacements: [source, destination, destination, source],
+            type: sequelize.QueryTypes.SELECT})
     console.log("chats",chats);
     return chats;
 }
@@ -47,9 +59,12 @@ let getChatByDestination = async(source, destination) =>{
 exports.getChats = async(req, res) => {
     let chats = "";
     try{
-        let destinationId = req.query.userid;
-        let sourceId = 1; // token
-        chats = await getChatByDestination(sourceId, destinationId);
+        let destinationEmail = req.query.dstemail;
+        console.log("destinationEmail",destinationEmail);
+        let sourceEmail = req.query.srcemail; // token
+        
+        console.log("sourceEmail",sourceEmail)
+        chats = await getChatByDestination(sourceEmail, destinationEmail);
         console.log("chats: ",chats);
         res.json(chats);
         return true;

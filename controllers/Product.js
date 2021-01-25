@@ -12,11 +12,15 @@ let getAllProducts = async(req, res) =>{
 
 
 let getAllProductPrev = async(req, res) => {
+    const page = req.query.page;
+    const numItems = 12;
+    const offset = (page-1)*numItems;
     let q = `
-        SELECT title, price, description, sellDate, productStatus, mainImage, usr.name, usr.email
+        SELECT PRODUCTS.id, title, price, description, sellDate, productStatus, mainImage, usr.name, usr.email
         FROM PRODUCTS
         JOIN USERS as usr
-        ON products.sellerId = usr.id; `
+        ON products.sellerId = usr.id
+        LIMIT ${offset},${numItems}`
     let products = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT});
     return products;
 }
@@ -51,7 +55,8 @@ let getProductId = async(id) =>{
 }
 
 let getProductByUserEmail = async(email) =>{
-    let q = `SELECT * 
+    let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, category,
+    PRODUCTS.createdAt, PRODUCTS.updatedAt 
             FROM PRODUCTS
             INNER JOIN USERS
             ON products.sellerId = users.id

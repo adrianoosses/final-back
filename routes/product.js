@@ -9,5 +9,6 @@ const {auth} = require('../controllers/middlewares/Auth');
 
 router.post('/', addProduct);
 router.get('/',auth, getProducts);
+//router.get('/',getProducts);
 
 exports.routes = router;
