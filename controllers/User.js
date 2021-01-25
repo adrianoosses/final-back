@@ -3,6 +3,7 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
+
 exports.getAllUsers = async(req, res) =>{
     let q = `SELECT * FROM USERS`
     let users = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
@@ -30,10 +31,13 @@ exports.signUp = (req, res) =>{
     } = req.body;
     let q = `INSERT INTO USERS (name, lastName, email, password, role, birthDate, address, 
         phone, card, createdAt, updatedAt)
-        VALUES ('${name}', '${lastName}', '${email}', '${password}', '${role}', '${birthDate}', '${address}', 
-        '${phone}', '${card}', '${createdAt}', '${updatedAt}')`;
+        VALUES (?, ?, ?, ?, ?, ?, ?, 
+        ?, ?, ?, ?)`;
     try{
-        sequelize.query(q, {type: sequelize.QueryTypes.INSERT})
+        sequelize.query(q, 
+            {replacements: [name, lastName, email, password, role, birthDate, address,
+            phone, card, createdAt, updatedAt],
+                type: sequelize.QueryTypes.INSERT})
         res.status(200)
         .json({message:"Good" + msg});
     }catch{
@@ -49,17 +53,29 @@ let getUserByEmail = async(req, res) =>{
     if(req.body.email) email = req.body.email;
     if(req.query.email) email = req.query.email;
     console.log("getting user by email");
-    let q = `SELECT * FROM USERS WHERE email='${email}'`;
-    return sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
+    let q = `SELECT * FROM USERS WHERE email=?`;
+    return sequelize.query(q, 
+        {replacements: [email],
+            type: sequelize.QueryTypes.SELECT})
 }
 
 let generateToken = (user)=>{
     // console.log("generating token...");
     let newUser = {
-        email: user.email
+        id:user.id,
+        email: user.email,
+        role:user.role
     }
     // console.log("email: " + newUser.email);
     return jwt.sign(newUser, claveToken, {expiresIn: 60 * 60 * 24})
+}
+
+exports.decodeToken = (token) =>{
+    try {
+        return jwt.verify(token, claveToken);
+    } catch(e) {
+        return null;
+    }
 }
 
 exports.getUsers = async(req, res) => {

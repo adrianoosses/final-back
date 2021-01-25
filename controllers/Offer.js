@@ -3,23 +3,20 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
-let getOffersByEmail = async(sellerEmail) =>{
+let getOffersProductId = async(productId) =>{
     let q = `SELECT sellerId, productId, offerValue, offers.createdAt, offers.updatedAt
     FROM OFFERS
-    INNER JOIN USERS
-    ON users.id = offers.sellerId
-    WHERE users.email = "${sellerEmail}";`
-    let score = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("score", score);
-    return score;   
+    WHERE productId = "${productId}";`
+    let offer = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
+    console.log("offer", offer);
+    return offer;   
 }
 
 exports.getOffer = async(req, res) => {
     let score = "";
     try{
-        console.log("email: ", req.query);
-        const offer = await getOffersByEmail(req.query.email);
-        console.log("offer: ", score);
+        const offer = await getOffersProductId(req.query.product);
+        console.log("offer: ", offer);
         res.json(offer);
         return true;
     }catch{

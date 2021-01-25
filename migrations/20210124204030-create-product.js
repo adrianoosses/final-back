@@ -8,10 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      buyerId: {
+      sellerId: {
         type: Sequelize.INTEGER
       },
       title: {
+        type: Sequelize.STRING
+      },
+      mainImage: {
         type: Sequelize.STRING
       },
       description: {

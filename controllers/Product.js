@@ -10,6 +10,18 @@ let getAllProducts = async(req, res) =>{
     return product;   
 }
 
+
+let getAllProductPrev = async(req, res) => {
+    let q = `
+        SELECT title, price, description, sellDate, productStatus, mainImage, usr.name, usr.email
+        FROM PRODUCTS
+        JOIN USERS as usr
+        ON products.sellerId = usr.id; `
+    let products = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT});
+    return products;
+}
+
+/*
 let getAllProductPrev = async(req, res) => {
     let q = `
         SELECT title, price, description, sellDate, productStatus, img.path, usr.name, usr.email
@@ -17,10 +29,12 @@ let getAllProductPrev = async(req, res) => {
         JOIN IMAGES AS img
         ON products.id = img.productId
         JOIN USERS as usr
-        ON products.buyerId = usr.id; `
+        ON products.sellerId = usr.id; `
     let products = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT});
     return products;
 }
+*/
+
 
 let getProductByUserId = async(userId) =>{
     let q = `SELECT * FROM PRODUCTS WHERE userId='${userId}'`
@@ -40,9 +54,11 @@ let getProductByUserEmail = async(email) =>{
     let q = `SELECT * 
             FROM PRODUCTS
             INNER JOIN USERS
-            ON products.buyerId = users.id
-            WHERE users.email='${email}';`
-    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
+            ON products.sellerId = users.id
+            WHERE users.email=?;`
+    let product = await sequelize.query(q, 
+        {replacements: [email],
+            type: sequelize.QueryTypes.SELECT})
     console.log("products",product);
     return product;   
 }
@@ -61,15 +77,46 @@ exports.getProducts = async(req, res) => {
     } 
 }
 
+
 exports.addProduct = async (req, res) =>{
     let msg = '';
-    let {buyerId, title, description, price, sellDate, productStatus, createdAt, updatedAt} = req.body;
-    let q = `INSERT INTO PRODUCTS (buyerId, title, price, description, sellDate, 
-        productStatus, createdAt, updatedAt)
-        VALUES ('${buyerId}','${title}', '${price}', '${description}', '${sellDate}',  
-        '${productStatus}', '${createdAt}', '${updatedAt}')`;
+    let {sellerEmail, title, description, mainImage, price, sellDate, productStatus, createdAt, updatedAt} = req.body;
+    let q = `INSERT INTO PRODUCTS ( sellerId, title, price, description, sellDate, 
+        productStatus, mainImage, createdAt, updatedAt)
+        VALUES ((SELECT id
+            FROM USERS
+            WHERE users.email = ?
+            ),?, ?, ?, ?,  
+        ?, ?,  ?, ?)`;
+    let q2 = `INSERT INTO IMAGES (productId, path, createdAt, updatedAt) 
+        VALUES((SELECT MAX(id) FROM PRODUCTS), ?, ?, ?);`;
+
+        //LAST_INSERT_ID()SELECT MAX(id) FROM PRODUCTS;
     try{
-        msg = 'Product added.';
+        msg = 'Product added.'; 
+        const p1 = sequelize.query(q, 
+            {replacements: [sellerEmail,title,price,description,sellDate,productStatus,mainImage,createdAt,updatedAt],
+            type: sequelize.QueryTypes.INSERT});
+        const p2 = sequelize.query(q2, 
+            {replacements: [mainImage,createdAt,updatedAt],
+                type: sequelize.QueryTypes.INSERT,});
+        await Promise.all([p1, p2])
+        res.status(200)
+        .json({message:"Good: " + msg});
+    }catch{
+        res.status(400)
+        .json({error:"Wrong"});
+    }
+    return true;
+};
+
+
+exports.addImageToProduct = async (req, res) =>{
+    let msg = '';
+    //let {sellerEmail, title, description, price, sellDate, productStatus, createdAt, updatedAt} = req.body;
+    let q = `SELECT LAST_INSERT_ID();`;
+    try{
+        msg = 'Image added.';
         await sequelize.query(q, {type: sequelize.QueryTypes.INSERT})
         res.status(200)
         .json({message:"Good: " + msg});

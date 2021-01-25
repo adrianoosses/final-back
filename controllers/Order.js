@@ -10,8 +10,8 @@ let getAllOrders = async(req, res) =>{
     return orders;   
 }
 
-let getOrdersByUserId = async(buyerId) =>{
-    let q = `SELECT * FROM ORDERS WHERE userId='${buyerId}'`
+let getOrdersByUserId = async(sellerId) =>{
+    let q = `SELECT * FROM ORDERS WHERE userId='${sellerId}'`
     let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
     console.log("products",product);
     return product;   

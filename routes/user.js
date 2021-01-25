@@ -5,8 +5,7 @@ const {User} = require('../models/user.js');
 //const {auth, isAdmin} = require('./middlewares.js');
 //const {getProfile, login, addUser, getUsers, changeUser, deleteUserByName} = require('./service.js');
 const {getUsers, signUp, login} = require('../controllers/User.js');
-
-
+const {auth} = require('../controllers/middlewares/Auth');
 
 router.post('/', signUp);
 router.post('/login', login);
