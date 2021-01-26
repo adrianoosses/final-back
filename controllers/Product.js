@@ -55,12 +55,13 @@ let getProductId = async(id) =>{
 }
 
 let getProductByUserEmail = async(email) =>{
+    console.log("get product by emailllll")
     let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, category,
     PRODUCTS.createdAt, PRODUCTS.updatedAt 
             FROM PRODUCTS
             INNER JOIN USERS
             ON products.sellerId = users.id
-            WHERE users.email=?;`
+            WHERE users.email=?`
     let product = await sequelize.query(q, 
         {replacements: [email],
             type: sequelize.QueryTypes.SELECT})
@@ -69,12 +70,13 @@ let getProductByUserEmail = async(email) =>{
 }
 
 exports.getProducts = async(req, res) => {
+    console.log("entra en getProducts");
     let products = "";
     try{
         if(req.query.email) products = await getProductByUserEmail(req.query.email);
         else products = await getAllProductPrev(req, res);
         console.log("product: ", products);
-        res.json(products);
+        res.status(200).json(products);
         return true;
     }catch{
         res.status(400).json({"Error":products});

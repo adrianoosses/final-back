@@ -8,7 +8,7 @@ const {addProduct, getProducts} = require('../controllers/Product.js');
 const {auth} = require('../controllers/middlewares/Auth');
 
 router.post('/', addProduct);
-router.get('/',auth, getProducts);
-//router.get('/',getProducts);
+//router.get('/',auth, getProducts);
+router.get('/',getProducts);
 
 exports.routes = router;

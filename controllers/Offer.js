@@ -24,7 +24,7 @@ exports.getOffer = async(req, res) => {
         console.log("product id ", req.query.productid);
         const offer = await getOffersProductId(req.query.productid);
         console.log("offer: ", offer);
-        res.json(offer);
+        res.status(200).json(offer);
         return true;
     }catch{
         res.status(400).json({"Error":offer});

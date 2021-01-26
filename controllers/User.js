@@ -2,7 +2,7 @@ const {sequelize} = require('../models/index.js');
 let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
-
+const bcrypt = require('bcrypt');
 
 exports.getAllUsers = async(req, res) =>{
     let q = `SELECT * FROM USERS`
@@ -15,7 +15,7 @@ exports.getUsers = async(req, res) => {
     try{
         user = await getAllUsers(req, res);
         console.log("user: ", user);
-        res.json(user);
+        res.status(200).json(user);
         return true;
     }catch{
         res.status(400).json({"Error":user});
@@ -35,7 +35,7 @@ exports.signUp = (req, res) =>{
         ?, ?, ?, ?)`;
     try{
         sequelize.query(q, 
-            {replacements: [name, lastName, email, password, role, birthDate, address,
+            {replacements: [name, lastName, email, bcrypt.hashSync(password, 6), role, birthDate, address,
             phone, card, createdAt, updatedAt],
                 type: sequelize.QueryTypes.INSERT})
         res.status(200)
@@ -84,7 +84,7 @@ exports.getUsers = async(req, res) => {
         if(req.query.email || req.query.email) user = await getUserByEmail(req, res);
         else user = await getAllUsers(req, res);
         console.log("user: ", user);
-        res.json(user);
+        res.status(200).json(user);
         return true;
     }catch{
         res.status(400).json({"Error":user});
@@ -96,12 +96,15 @@ exports.login = async(req, res) =>{
     try{
         let password = req.body.password;
         let usrLogin = await getUserByEmail(req, res);
-        if(usrLogin && usrLogin[0].password === password){
+        //const isValid = usrLogin && usrLogin[0].password === password;
+        const isValid = bcrypt.compareSync(password, usrLogin[0].password, 6);
+        console.log( isValid);
+        if(usrLogin && isValid){
             let token = generateToken(usrLogin[0]);
-            res.json({message:"Logged", token});
+            res.status(200).json({message:"Logged", token});
             return true;
         } else{
-            res.json({error:"Wrong user or password "});
+            res.status(400).json({error:"Wrong user or password "});
             return false;
         }
     }catch{
