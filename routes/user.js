@@ -4,14 +4,16 @@ const router = express.Router();
 const {User} = require('../models/user.js');
 //const {auth, isAdmin} = require('./middlewares.js');
 //const {getProfile, login, addUser, getUsers, changeUser, deleteUserByName} = require('./service.js');
-const {getUsers, signUp, login} = require('../controllers/User.js');
+const {getUsers, signUp, login, getListUsersAndProducts} = require('../controllers/User.js');
 const {auth} = require('../controllers/middlewares/Auth');
+const {isAdmin} = require('../controllers/middlewares/Admin');
 
 router.post('/', signUp);
 router.post('/login', login);
 
 // Endpoint de Perfil (R)read -> GET
 router.get('/', getUsers);
+router.get('/list', isAdmin, getListUsersAndProducts);
 //router.get('/profile', getProfile);
 //router.put('/', changeUser);
 

@@ -59,6 +59,12 @@ let getUserByEmail = async(req, res) =>{
             type: sequelize.QueryTypes.SELECT})
 }
 
+exports.userHasProduct = async(userId, productId) =>{
+    let q = `SELECT * FROM PRODUCTS WHERE id=? AND sellerId=?`;
+    return sequelize.query(q, 
+        {replacements: [productId, userId],
+            type: sequelize.QueryTypes.SELECT})
+}
 let generateToken = (user)=>{
     // console.log("generating token...");
     let newUser = {
@@ -107,6 +113,23 @@ exports.login = async(req, res) =>{
             res.status(400).json({error:"Wrong user or password "});
             return false;
         }
+    }catch{
+        res.status(400).json({"error":"error"})
+        return false;
+    }
+};
+
+exports.getListUsersAndProducts = async(req, res) =>{
+    let q = `SELECT users.name, users.lastName, users.email, users.birthDate, users.address, 
+    users.phone, products.title, products.price, products.createdAt
+    FROM USERS
+    LEFT JOIN PRODUCTS
+    ON USERS.id = PRODUCTS.sellerId`;
+    try{
+        let usersAndProducts = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
+        console.log("list", usersAndProducts);
+        res.status(200).json(usersAndProducts);
+        return true;
     }catch{
         res.status(400).json({"error":"error"})
         return false;
