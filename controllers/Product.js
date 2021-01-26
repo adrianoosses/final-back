@@ -56,7 +56,7 @@ let getProductId = async(id) =>{
 
 let getProductByUserEmail = async(email) =>{
     console.log("get product by emailllll")
-    let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, category,
+    let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, USERS.name, USERS.email, category,
     PRODUCTS.createdAt, PRODUCTS.updatedAt 
             FROM PRODUCTS
             INNER JOIN USERS
@@ -117,6 +117,24 @@ exports.addProduct = async (req, res) =>{
     return true;
 };
 
+exports.deleteProduct = async (req, res) =>{
+    let msg = '';
+    let {id} = req.query;
+    let q = `DELETE FROM PRODUCTS
+            WHERE id = ?`;
+    try{
+        msg = 'Product deleted';
+        await sequelize.query(q, {
+            replacements: [id],
+            type: sequelize.QueryTypes.DELETE})
+        res.status(200)
+        .json({message:"Good: " + msg});
+    }catch{
+        res.status(400)
+        .json({error:"Wrong"});
+    }
+    return true;
+};
 
 exports.addImageToProduct = async (req, res) =>{
     let msg = '';
