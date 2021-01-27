@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const mysql = require('mysql2/promise');
 const app = express();
@@ -12,6 +13,8 @@ let offer = require('./routes/offer.js');
 let productFavorite = require('./routes/productFavorite.js');
 
 let cors = require('cors');
+
+
 
 
 // asignacion del puerto 3000 para el servidor
