@@ -40,19 +40,7 @@ let getAllProductPrev = async(req, res) => {
 */
 
 
-let getProductByUserId = async(userId) =>{
-    let q = `SELECT * FROM PRODUCTS WHERE userId='${userId}'`
-    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
-    return product;   
-}
 
-let getProductId = async(id) =>{
-    let q = `SELECT * FROM PRODUCTS WHERE id='${id}'`
-    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
-    return product;   
-}
 
 let getProductByUserEmail = async(email) =>{
     console.log("get product by emailllll")
