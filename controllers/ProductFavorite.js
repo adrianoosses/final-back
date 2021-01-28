@@ -4,12 +4,16 @@ let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
 let getFavoriteByEmail = async(userEmail) =>{
-    let q = `SELECT userId, productId, PRODUCTFAVORITES.createdAt, PRODUCTFAVORITES.updatedAt
-    FROM PRODUCTFAVORITES
+    let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, USERS.name, USERS.email, category,
+    PRODUCTS.createdAt, PRODUCTS.updatedAt
+	FROM PRODUCTS
+    INNER JOIN PRODUCTFAVORITES
+    ON productfavorites.productId = products.id
     INNER JOIN USERS
     ON users.id = PRODUCTFAVORITES.userId
-    WHERE users.email = "${userEmail}";`
-    let favorite = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
+    WHERE users.email = ?;`
+    let favorite = await sequelize.query(q, {replacements: [email],
+        type: sequelize.QueryTypes.SELECT})
     console.log("favorite", favorite);
     return favorite;   
 }
