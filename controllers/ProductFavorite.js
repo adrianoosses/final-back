@@ -54,3 +54,23 @@ exports.setFavorite = async(req, res) =>{
         return false;
     }
 };
+
+
+exports.deleteProductFavorite = async(req, res) =>{
+    let msg = '';
+    let {productId} = req.query;
+    let q = `
+    DELETE FROM PRODUCTFAVORITES WHERE productId = '${productId}'`;
+    try{
+        msg = 'Favorite added.';
+        let favorite = await sequelize.query(q, {replacements: [userEmail],
+            type: sequelize.QueryTypes.DELETE})
+        res.status(200)
+        .json({message:"Good" + msg});
+        return true;
+    }catch{
+        res.status(400)
+        .json({error:"Wrong"});
+        return false;
+    }
+};
