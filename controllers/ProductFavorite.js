@@ -62,9 +62,9 @@ exports.setFavorite = async(req, res) =>{
 
 exports.deleteProductFavorite = async(req, res) =>{
     let msg = '';
-    let {productId} = req.query;
+    let {productid} = req.query;
     let q = `
-    DELETE FROM PRODUCTFAVORITES WHERE productId = '${productId}'`;
+    DELETE FROM PRODUCTFAVORITES WHERE productId = '${productid}'`;
     try{
         msg = 'Favorite added.';
         let favorite = await sequelize.query(q, {replacements: [userEmail],
