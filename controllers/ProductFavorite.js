@@ -12,7 +12,7 @@ let getFavoriteByEmail = async(userEmail) =>{
     INNER JOIN USERS
     ON users.id = PRODUCTFAVORITES.userId
     WHERE users.email = ?;`
-    let favorite = await sequelize.query(q, {replacements: [email],
+    let favorite = await sequelize.query(q, {replacements: [userEmail],
         type: sequelize.QueryTypes.SELECT})
     console.log("favorite", favorite);
     return favorite;   
