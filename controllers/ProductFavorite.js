@@ -67,8 +67,7 @@ exports.deleteProductFavorite = async(req, res) =>{
     DELETE FROM PRODUCTFAVORITES WHERE productId = '${productid}'`;
     try{
         msg = 'Favorite added.';
-        let favorite = await sequelize.query(q, {replacements: [userEmail],
-            type: sequelize.QueryTypes.DELETE})
+        let favorite = await sequelize.query(q,{type: sequelize.QueryTypes.DELETE})
         res.status(200)
         .json({message:"Good" + msg});
         return true;
