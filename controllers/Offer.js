@@ -3,6 +3,10 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
+/**
+ * Offer controller
+ */
+
 let getOffersProductId = async(productId) =>{
     let q = `SELECT users.email, products.title, offerValue, offers.createdAt, offers.updatedAt
     FROM OFFERS

@@ -3,6 +3,10 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
+/**
+ * ProductFavorite controller
+ */
+
 let getFavoriteByEmail = async(userEmail) =>{
     let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, usr.name, usr.email, category,
     PRODUCTS.createdAt, PRODUCTS.updatedAt

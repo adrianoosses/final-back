@@ -1,7 +1,9 @@
 const {decodeToken, userHasProduct} = require('../User');
 
+/**
+ * User auth middleware
+ */
 exports.auth = (req, res, next) => {
-    //console.log("TOKEN auth: " + us.generateToken(req.body));
     if(req.query.email){
         const token = req.headers.authorization;
         console.log("TOKEN: ", req.headers.authorization);
@@ -21,8 +23,10 @@ exports.auth = (req, res, next) => {
     }
 }
 
+/**
+ * Product auth middleware
+ */
 exports.authDeleteProduct = (req, res, next) => {
-    //console.log("TOKEN auth: " + us.generateToken(req.body));
     if(req.query.id){
         const token = req.headers.authorization;
         console.log("TOKEN: ", req.headers.authorization);

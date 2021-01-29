@@ -3,14 +3,9 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
-/*
-let getAllProducts = async(req, res) =>{
-    let q = `SELECT * FROM PRODUCTS`
-    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
-    return product;   
-}
-*/
+/**
+ * Image controller
+ */
 
 let getImagesByProductId = async(productId) =>{
     let q = `SELECT * FROM IMAGES WHERE productId='${productId}'`
@@ -18,14 +13,6 @@ let getImagesByProductId = async(productId) =>{
     console.log("images", images);
     return images;   
 }
-/*
-let getProductId = async(id) =>{
-    let q = `SELECT * FROM PRODUCTS WHERE id='${id}'`
-    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
-    return product;   
-}
-*/
 
 exports.getImages = async(req, res) => {
     let images = "";

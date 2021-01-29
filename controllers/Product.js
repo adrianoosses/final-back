@@ -3,12 +3,9 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
-let getAllProducts = async(req, res) =>{
-    let q = `SELECT * FROM PRODUCTS`
-    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
-    return product;   
-}
+/**
+ * Products controller
+ */
 
 
 let getAllProductPrev = async(req, res) => {
@@ -24,21 +21,6 @@ let getAllProductPrev = async(req, res) => {
     let products = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT});
     return products;
 }
-
-/*
-let getAllProductPrev = async(req, res) => {
-    let q = `
-        SELECT title, price, description, sellDate, productStatus, img.path, usr.name, usr.email
-        FROM PRODUCTS
-        JOIN IMAGES AS img
-        ON products.id = img.productId
-        JOIN USERS as usr
-        ON products.sellerId = usr.id; `
-    let products = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT});
-    return products;
-}
-*/
-
 
 
 
@@ -101,6 +83,9 @@ exports.getProductById = async(req, res) => {
     } 
 }
 
+/**
+ * Set one image on both tables products and images
+ */
 
 exports.addProduct = async (req, res) =>{
     let msg = '';
@@ -114,8 +99,6 @@ exports.addProduct = async (req, res) =>{
         ?, ?,  ?, ?)`;
     let q2 = `INSERT INTO IMAGES (productId, path, createdAt, updatedAt) 
         VALUES((SELECT MAX(id) FROM PRODUCTS), ?, ?, ?);`;
-
-        //LAST_INSERT_ID()SELECT MAX(id) FROM PRODUCTS;
     try{
         msg = 'Product added.'; 
         const p1 = sequelize.query(q, 
@@ -155,7 +138,6 @@ exports.deleteProduct = async (req, res) =>{
 
 exports.addImageToProduct = async (req, res) =>{
     let msg = '';
-    //let {sellerEmail, title, description, price, sellDate, productStatus, createdAt, updatedAt} = req.body;
     let q = `SELECT LAST_INSERT_ID();`;
     try{
         msg = 'Image added.';

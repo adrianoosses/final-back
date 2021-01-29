@@ -4,6 +4,10 @@ let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 const bcrypt = require('bcrypt');
 
+/**
+ * Users controller
+ */
+
 exports.getAllUsers = async(req, res) =>{
     let q = `SELECT * FROM USERS`
     let users = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
@@ -66,13 +70,11 @@ exports.userHasProduct = async(userId, productId) =>{
             type: sequelize.QueryTypes.SELECT})
 }
 let generateToken = (user)=>{
-    // console.log("generating token...");
     let newUser = {
         id:user.id,
         email: user.email,
         role:user.role
     }
-    // console.log("email: " + newUser.email);
     return jwt.sign(newUser, claveToken, {expiresIn: 60 * 60 * 24})
 }
 
@@ -102,7 +104,6 @@ exports.login = async(req, res) =>{
     try{
         let password = req.body.password;
         let usrLogin = await getUserByEmail(req, res);
-        //const isValid = usrLogin && usrLogin[0].password === password;
         const isValid = bcrypt.compareSync(password, usrLogin[0].password, 6);
         console.log( isValid);
         if(usrLogin && isValid){

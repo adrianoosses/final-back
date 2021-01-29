@@ -1,5 +1,8 @@
 const {decodeToken} = require('../User');
 
+/**
+ * Admin middleware
+ */
 exports.isAdmin = async (req, res, next) => {
     try{
         const token = req.headers.authorization;

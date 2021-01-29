@@ -3,6 +3,10 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
+/**
+ * Order controller
+ */
+
 let getAllOrders = async(req, res) =>{
     let q = `SELECT * FROM ORDERS`
     let orders = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
@@ -10,18 +14,10 @@ let getAllOrders = async(req, res) =>{
     return orders;   
 }
 
-let getOrdersByUserId = async(sellerId) =>{
-    let q = `SELECT * FROM ORDERS WHERE userId='${sellerId}'`
-    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
-    return product;   
-}
 
 exports.getOrders = async(req, res) => {
     let orders = "";
     try{
-        //if(req.query.userid) orders = await getProductToSellByUserId(req.query.userid);
-        //else 
         orders = await getAllOrders(req, res);
         console.log("orders: ",orders);
         res.json(orders);

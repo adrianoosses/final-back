@@ -3,37 +3,9 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
-/*
-let getAllChats = async(req, res) =>{
-    let q = `SELECT * FROM CHATS`
-    let orders = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("orders",orders);
-    return orders;   
-}*/
-
-/*
-let getChatsById = async(userId) =>{
-    let q = `SELECT * FROM ORDERS WHERE userId='${buyerId}'`
-    let product = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
-    return product;   
-}
-
-exports.getOrders = async(req, res) => {
-    let orders = "";
-    try{
-        //if(req.query.userid) orders = await getProductToSellByUserId(req.query.userid);
-        //else 
-        orders = await getAllOrders(req, res);
-        console.log("orders: ",orders);
-        res.json(orders);
-        return true;
-    }catch{
-        res.status(400).json({"Error":orders});
-        return false;
-    } 
-}
-*/
+/**
+ * Chat controller
+ */
 
 let getChatByDestination = async(source, destination) =>{
     let q = `SELECT id, sourceemail, destinationemail, chatDate, message

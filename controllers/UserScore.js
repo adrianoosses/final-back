@@ -3,6 +3,10 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
+/**
+ * UserScores controller
+ */
+
 let getScoresByEmail = async(sellerIdEmail) =>{
     let q = `SELECT AVG(uScore) as score
     FROM USERSCORES 
@@ -17,8 +21,6 @@ let getScoresByEmail = async(sellerIdEmail) =>{
 exports.getScore = async(req, res) => {
     let score = "";
     try{
-        //if(req.query.userid) orders = await getProductToSellByUserId(req.query.userid);
-        //else 
         const score = await getScoresByEmail(req.query.email);
         console.log("email score:",req.query.email);
         console.log("score: ", score);
