@@ -71,6 +71,35 @@ exports.getProducts = async(req, res) => {
         return false;
     } 
 }
+let getProductByIdQ = async(id) =>{
+    console.log("get product by emailllll")
+    let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, USERS.name, USERS.email, category,
+    PRODUCTS.createdAt, PRODUCTS.updatedAt
+            FROM PRODUCTS
+            INNER JOIN users
+            ON USERS.ID = PRODUCTS.sellerId
+            WHERE products.id=?`
+    let product = await sequelize.query(q, 
+        {replacements: [id],
+            type: sequelize.QueryTypes.SELECT})
+    console.log("products",product);
+    return product;   
+}
+
+exports.getProductById = async(req, res) => {
+    console.log("entra en getProducts");
+    let product = "";
+    try{
+        console.log("IDIIDI: ", req.query.id);
+        if(req.query.id) product = await getProductByIdQ(req.query.id);
+        console.log("product: ", product);
+        res.status(200).json(product);
+        return true;
+    }catch{
+        res.status(400).json({"Error":product});
+        return false;
+    } 
+}
 
 
 exports.addProduct = async (req, res) =>{

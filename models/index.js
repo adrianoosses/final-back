@@ -12,7 +12,7 @@ let sequelize;
 if (process.env.CLEARDB_DATABASE_URL) {
   sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL,  {"dialect": "mysql"});
 } else {
-  sequelize = new Sequelize(process.env.DATABASE, process.env.USERNAME, process.env.PASSWORD, {"dialect": "mysql"});
+  sequelize = new Sequelize(process.env.DATABASE, 'root', process.env.PASSWORD, {"dialect": "mysql"});
 }
 
 fs
