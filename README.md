@@ -48,23 +48,23 @@ nodemon app.js
 #### User
 | VERB| PATH|DESCRIPTION|AUTH|ISADMIN|
 | ----- | ---- | ---- | ---- | ---- |
-| POST | /user | Add a new user on DB |  |  |
-| POST | /user/login | Login with user |  |  |
-| GET | /user | Return all users on DB |  |  |
-| GET | /user?email=<email>| Return an user given email |  |  |
-| GET | /user/list | Return list of users and products por admin view |  | x |
-| POST | /product | Add a new product on DB |  |  |
-| GET | /product | Return all products on DB |  |  |
-| GET | /product/details?id=<id>| Return an product given id |  |  |
-| DELETE | /product?id=<id> | Return products given id | x |  |
-| POST | /offer | Add a new offer on DB |  |  |
-| GET | /offer?email=<email-to> | Return all offers received |  |  |
-| POST | /productfavorite | Add a new product to favorites on DB |  |  |
-| GET | /productfavorite?email=<email-to> | Return all favorite products of an user |  |  |
-| POST | /userscore | Add a new score to an user on DB |  |  |
-| GET | /userscore?email=<email-to> | Return average of user score |  |  |
-| POST | /image | Add a new product image |  |  |
-| GET | /image?product=<id> | Get product images |  |  |
+| POST | ```/user``` | Add a new user on DB |  |  |
+| POST | ```/user/login``` | Login with user |  |  |
+| GET | ```/user``` | Return all users on DB |  |  |
+| GET | ```/user?email=<email>```| Return an user given email |  |  |
+| GET | ```/user/list``` | Return list of users and products por admin view |  | x |
+| POST | ```/product``` | Add a new product on DB |  |  |
+| GET | ```/product``` | Return all products on DB |  |  |
+| GET | ```/product/details?id=<id>```| Return an product given id |  |  |
+| DELETE | ```/product?id=<id>``` | Return products given id | x |  |
+| POST | ```/offer``` | Add a new offer on DB |  |  |
+| GET | ```/offer?email=<email-to>``` | Return all offers received |  |  |
+| POST | ```/productfavorite``` | Add a new product to favorites on DB |  |  |
+| GET | ```/productfavorite?email=<email-to>``` | Return all favorite products of an user |  |  |
+| POST | ```/userscore``` | Add a new score to an user on DB |  |  |
+| GET | ```/userscore?email=<email-to>``` | Return average of user score |  |  |
+| POST | ```/image``` | Add a new product image |  |  |
+| GET | ```/image?product=<id>``` | Get product images |  |  |
 
 
 
