@@ -12,7 +12,7 @@ Front part on: https://github.com/adrianoosses/final-front
 ## SET UP
 <a name="db"></a>
 ### Option 1: Heroku
-### Option 2:
+### Option 2: local
 1. Clone the repository into your machine 
 ```
 git clone <name-of-this-repo.git>
@@ -49,12 +49,24 @@ nodemon app.js
 | VERB| PATH|DESCRIPTION|AUTH|ISADMIN|
 | ----- | ---- | ---- | ---- | ---- |
 | POST | /user | Add a new user on DB |  |  |
+| POST | /user/login | Login with user |  |  |
 | GET | /user | Return all users on DB |  |  |
 | GET | /user?email=<email>| Return an user given email |  |  |
+| GET | /user/list | Return list of users and products por admin view |  | x |
 | POST | /product | Add a new product on DB |  |  |
 | GET | /product | Return all products on DB |  |  |
-| GET | /product?id=<id>| Return an product given id |  |  |
+| GET | /product/details?id=<id>| Return an product given id |  |  |
 | DELETE | /product?id=<id> | Return products given id | x |  |
+| POST | /offer | Add a new offer on DB |  |  |
+| GET | /offer?email=<email-to> | Return all offers received |  |  |
+| POST | /productfavorite | Add a new product to favorites on DB |  |  |
+| GET | /productfavorite?email=<email-to> | Return all favorite products of an user |  |  |
+| POST | /userscore | Add a new score to an user on DB |  |  |
+| GET | /userscore?email=<email-to> | Return average of user score |  |  |
+| POST | /image | Add a new product image |  |  |
+| GET | /image?product=<id> | Get product images |  |  |
+
+
 
 <a name="tech"></a>
 ## TECHNOLOGIES USED
