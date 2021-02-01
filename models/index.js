@@ -10,9 +10,9 @@ const db = {};
 
 let sequelize;
 if (process.env.CLEARDB_DATABASE_URL) {
-  sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL,  {"dialect": process.env.DB_DIALECT});
+  sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL,  {"dialect": process.env.DB_DIALECT, "host": process.env.DB_HOST});
 } else {
-  sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD, {"dialect": process.env.DB_DIALECT});
+  sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD, {"dialect": process.env.DB_DIALECT, "host": process.env.DB_HOST});
 }
 
 fs
