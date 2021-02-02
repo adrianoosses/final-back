@@ -18,16 +18,16 @@ let getOffersProductId = async(productId) =>{
     ORDER BY offerValue DESC
     ;`
     let offer = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("offer", offer);
+    //console.log("offer", offer);
     return offer;   
 }
 
 exports.getOffer = async(req, res) => {
-    let score = "";
+    let offer = "";
     try{
-        console.log("product id ", req.query.productid);
+        //console.log("product id ", req.query.productid);
         const offer = await getOffersProductId(req.query.productid);
-        console.log("offer: ", offer);
+        //console.log("offer: ", offer);
         res.status(200).json(offer);
         return true;
     }catch{

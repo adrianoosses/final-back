@@ -25,7 +25,7 @@ let getAllProductPrev = async(req, res) => {
 
 
 let getProductByUserEmail = async(email) =>{
-    console.log("get product by emailllll")
+    //console.log("get product by emailllll")
     let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, USERS.name, USERS.email, category,
     PRODUCTS.createdAt, PRODUCTS.updatedAt 
             FROM PRODUCTS
@@ -35,17 +35,17 @@ let getProductByUserEmail = async(email) =>{
     let product = await sequelize.query(q, 
         {replacements: [email],
             type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
+    //console.log("products",product);
     return product;   
 }
 
 exports.getProducts = async(req, res) => {
-    console.log("entra en getProducts");
+    //console.log("entra en getProducts");
     let products = "";
     try{
         if(req.query.email) products = await getProductByUserEmail(req.query.email);
         else products = await getAllProductPrev(req, res);
-        console.log("product: ", products);
+        //console.log("product: ", products);
         res.status(200).json(products);
         return true;
     }catch{
@@ -54,7 +54,7 @@ exports.getProducts = async(req, res) => {
     } 
 }
 let getProductByIdQ = async(id) =>{
-    console.log("get product by emailllll")
+    //console.log("get product by emailllll")
     let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, USERS.name, USERS.email, category,
     PRODUCTS.createdAt, PRODUCTS.updatedAt
             FROM PRODUCTS
@@ -64,17 +64,17 @@ let getProductByIdQ = async(id) =>{
     let product = await sequelize.query(q, 
         {replacements: [id],
             type: sequelize.QueryTypes.SELECT})
-    console.log("products",product);
+    //console.log("products",product);
     return product;   
 }
 
 exports.getProductById = async(req, res) => {
-    console.log("entra en getProducts");
+    //console.log("entra en getProducts");
     let product = "";
     try{
-        console.log("IDIIDI: ", req.query.id);
+        //console.log("IDIIDI: ", req.query.id);
         if(req.query.id) product = await getProductByIdQ(req.query.id);
-        console.log("product: ", product);
+        //console.log("product: ", product);
         res.status(200).json(product);
         return true;
     }catch{

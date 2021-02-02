@@ -10,7 +10,7 @@ const chalk = require('chalk');
 let getAllOrders = async(req, res) =>{
     let q = `SELECT * FROM ORDERS`
     let orders = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("orders",orders);
+    //console.log("orders",orders);
     return orders;   
 }
 
@@ -19,7 +19,7 @@ exports.getOrders = async(req, res) => {
     let orders = "";
     try{
         orders = await getAllOrders(req, res);
-        console.log("orders: ",orders);
+        //console.log("orders: ",orders);
         res.json(orders);
         return true;
     }catch{

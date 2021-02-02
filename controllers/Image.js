@@ -10,7 +10,7 @@ const chalk = require('chalk');
 let getImagesByProductId = async(productId) =>{
     let q = `SELECT * FROM IMAGES WHERE productId='${productId}'`
     let images = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("images", images);
+    //console.log("images", images);
     return images;   
 }
 
@@ -18,7 +18,7 @@ exports.getImages = async(req, res) => {
     let images = "";
     try{
         images = await getImagesByProductId(req.query.product);
-        console.log("images: ", images);
+        //console.log("images: ", images);
         res.json(images);
         return true;
     }catch{

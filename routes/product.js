@@ -3,15 +3,15 @@ const app = express();
 const router = express.Router();
 
 const {addProduct, getProducts, deleteProduct, getProductById} = require('../controllers/Product.js');
-const {auth, authDeleteProduct} = require('../controllers/middlewares/Auth');
+const {simpleAuth, authProduct, guessAuth} = require('../controllers/middlewares/Auth');
 
 /**
  * Product routes
  */
 
-router.post('/', addProduct);
-router.get('/',getProducts);
-router.get('/details',getProductById);
-router.delete('/', authDeleteProduct, deleteProduct);
+router.post('/', simpleAuth, addProduct);
+router.get('/', guessAuth, getProducts);
+router.get('/details', guessAuth, getProductById);
+router.delete('/', authProduct, deleteProduct);
 
 exports.routes = router;

@@ -24,20 +24,21 @@ let getChatByDestination = async(source, destination) =>{
     let chats = await sequelize.query(q, 
         {replacements: [source, destination, destination, source],
             type: sequelize.QueryTypes.SELECT})
-    console.log("chats",chats);
+    //console.log("chats",chats);
     return chats;
 }
 
 exports.getChats = async(req, res) => {
-    let chats = "";
+    //let chats = "";
+    console.log("---------------ENTRA CHATS!");
     try{
         let destinationEmail = req.query.dstemail;
-        console.log("destinationEmail",destinationEmail);
+        //console.log("destinationEmail",destinationEmail);
         let sourceEmail = req.query.srcemail; // token
         
-        console.log("sourceEmail",sourceEmail)
+        //console.log("sourceEmail",sourceEmail)
         chats = await getChatByDestination(sourceEmail, destinationEmail);
-        console.log("chats: ",chats);
+        //console.log("chats: ",chats);
         res.json(chats);
         return true;
     }catch{

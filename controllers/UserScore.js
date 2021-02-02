@@ -14,7 +14,7 @@ let getScoresByEmail = async(sellerIdEmail) =>{
     ON users.id = userscores.userId
     WHERE users.email='${sellerIdEmail}';`
     let score = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    console.log("score", score);
+    //console.log("score", score);
     return score;   
 }
 
@@ -22,8 +22,8 @@ exports.getScore = async(req, res) => {
     let score = "";
     try{
         const score = await getScoresByEmail(req.query.email);
-        console.log("email score:",req.query.email);
-        console.log("score: ", score);
+        //console.log("email score:",req.query.email);
+        //console.log("score: ", score);
         res.json(score);
         return true;
     }catch{

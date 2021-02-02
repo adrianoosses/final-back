@@ -18,7 +18,7 @@ exports.getUsers = async(req, res) => {
     let user = "";
     try{
         user = await getAllUsers(req, res);
-        console.log("user: ", user);
+        //console.log("user: ", user);
         res.status(200).json(user);
         return true;
     }catch{
@@ -56,7 +56,7 @@ let getUserByEmail = async(req, res) =>{
     //let {email} = req.body;
     if(req.body.email) email = req.body.email;
     if(req.query.email) email = req.query.email;
-    console.log("getting user by email");
+    //console.log("getting user by email");
     let q = `SELECT * FROM USERS WHERE email=?`;
     return sequelize.query(q, 
         {replacements: [email],
@@ -75,7 +75,7 @@ let generateToken = (user)=>{
         email: user.email,
         role:user.role
     }
-    return jwt.sign(newUser, claveToken, {expiresIn: 60 * 60 * 24})
+    return jwt.sign(newUser, claveToken, {expiresIn: 60 * 60 * 24 })
 }
 
 exports.decodeToken = (token) =>{
@@ -91,7 +91,7 @@ exports.getUsers = async(req, res) => {
     try{
         if(req.query.email || req.query.email) user = await getUserByEmail(req, res);
         else user = await getAllUsers(req, res);
-        console.log("user: ", user);
+        //console.log("user: ", user);
         res.status(200).json(user);
         return true;
     }catch{
@@ -105,7 +105,7 @@ exports.login = async(req, res) =>{
         let password = req.body.password;
         let usrLogin = await getUserByEmail(req, res);
         const isValid = bcrypt.compareSync(password, usrLogin[0].password, 6);
-        console.log( isValid);
+        //console.log( isValid);
         if(usrLogin && isValid){
             let token = generateToken(usrLogin[0]);
             res.status(200).json({message:"Logged", token});
@@ -128,7 +128,7 @@ exports.getListUsersAndProducts = async(req, res) =>{
     ON USERS.id = PRODUCTS.sellerId`;
     try{
         let usersAndProducts = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-        console.log("list", usersAndProducts);
+        //console.log("list", usersAndProducts);
         res.status(200).json(usersAndProducts);
         return true;
     }catch{

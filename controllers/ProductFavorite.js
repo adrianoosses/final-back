@@ -22,16 +22,16 @@ let getFavoriteByEmail = async(userEmail) =>{
 		ON PRODUCTS.sellerId = usr.id;`
     let favorite = await sequelize.query(q, {replacements: [userEmail],
         type: sequelize.QueryTypes.SELECT})
-    console.log("favorite", favorite);
+    //console.log("favorite", favorite);
     return favorite;   
 }
 
 exports.getFavorite = async(req, res) => {
     let favorite = "";
     try{
-        console.log("email: ", req.query);
+        //console.log("email: ", req.query);
         const favorite = await getFavoriteByEmail(req.query.email);
-        console.log("favorite: ", favorite);
+        //console.log("favorite: ", favorite);
         res.json(favorite);
         return true;
     }catch{

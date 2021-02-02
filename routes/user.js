@@ -3,17 +3,17 @@ const app = express();
 const router = express.Router();
 const {User} = require('../models/user.js');
 const {getUsers, signUp, login, getListUsersAndProducts} = require('../controllers/User.js');
-const {auth} = require('../controllers/middlewares/Auth');
+const {auth, guessAuth} = require('../controllers/middlewares/Auth');
 const {isAdmin} = require('../controllers/middlewares/Admin');
 
 /**
  * User routes
  */
 
-router.post('/', signUp);
-router.post('/login', login);
+router.post('/', guessAuth, signUp);
+router.post('/login', guessAuth, login);
 
-router.get('/', getUsers);
+router.get('/', guessAuth, getUsers);
 router.get('/list', isAdmin, getListUsersAndProducts);
 
 exports.routes = router;

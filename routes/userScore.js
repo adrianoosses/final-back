@@ -3,12 +3,12 @@ const app = express();
 const router = express.Router();
 const {Order} = require('../models/order.js');
 const {addScore, getScore} = require('../controllers/UserScore.js');
-
+const {simpleAuth, guessAuth} = require('../controllers/middlewares/Auth');
 /**
  * UserScore routes
  */
 
-router.post('/', addScore);
-router.get('/', getScore);
+router.post('/', simpleAuth, addScore);
+router.get('/', guessAuth, getScore);
 
 exports.routes = router;
