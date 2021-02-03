@@ -8,18 +8,18 @@ const chalk = require('chalk');
  */
 
 let getFavoriteByEmail = async(userEmail) =>{
-    let q = `SELECT PRODUCTS.id, sellerId, title, mainImage, description, price, sellDate, productStatus, usr.name, usr.email, category,
-    PRODUCTS.createdAt, PRODUCTS.updatedAt
-    FROM PRODUCTS
+    let q = `SELECT Products.id, sellerId, title, mainImage, description, price, sellDate, productStatus, usr.name, usr.email, category,
+    Products.createdAt, Products.updatedAt
+    FROM Products
     INNER JOIN (
 		SELECT productId, userId
-		FROM PRODUCTFAVORITES
-		INNER JOIN USERS
-		ON users.id = PRODUCTFAVORITES.userId
-		WHERE users.email = ?) AS prodFav
-        ON prodFav.productId = products.id 
-	INNER JOIN USERS as usr
-		ON PRODUCTS.sellerId = usr.id;`
+		FROM ProductFavorites
+		INNER JOIN Users
+		ON Users.id = ProductFavorites.userId
+		WHERE Users.email = ?) AS prodFav
+        ON prodFav.productId = Products.id 
+	INNER JOIN Users as usr
+		ON Products.sellerId = usr.id;`
     let favorite = await sequelize.query(q, {replacements: [userEmail],
         type: sequelize.QueryTypes.SELECT})
     //console.log("favorite", favorite);
@@ -44,10 +44,10 @@ exports.setFavorite = async(req, res) =>{
     let msg = '';
     let {userEmail, productId, createdAt, updatedAt} = req.body;
     let q = `
-    INSERT INTO PRODUCTFAVORITES (userId, productId, createdAt, updatedAt)
+    INSERT INTO ProductFavorites (userId, productId, createdAt, updatedAt)
     VALUES((SELECT id
-    FROM USERS
-    WHERE users.email = '${userEmail}'
+    FROM Users
+    WHERE Users.email = '${userEmail}'
     ), '${productId}', '${createdAt}', '${updatedAt}')`;
     
     try{
@@ -68,7 +68,7 @@ exports.deleteProductFavorite = async(req, res) =>{
     let msg = '';
     let {productid} = req.query;
     let q = `
-    DELETE FROM PRODUCTFAVORITES WHERE productId = '${productid}'`;
+    DELETE FROM ProductFavorites WHERE productId = '${productid}'`;
     try{
         msg = 'Favorite added.';
         let favorite = await sequelize.query(q,{type: sequelize.QueryTypes.DELETE})

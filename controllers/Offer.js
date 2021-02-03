@@ -8,12 +8,12 @@ const chalk = require('chalk');
  */
 
 let getOffersProductId = async(productId) =>{
-    let q = `SELECT users.email, products.title, offerValue, offers.createdAt, offers.updatedAt
+    let q = `SELECT Users.email, Products.title, offerValue, offers.createdAt, offers.updatedAt
     FROM OFFERS
-    INNER JOIN PRODUCTS
-    ON offers.productId = products.id
-    INNER JOIN USERS
-    ON offers.sellerId = users.id
+    INNER JOIN Products
+    ON offers.productId = Products.id
+    INNER JOIN Users
+    ON offers.sellerId = Users.id
     WHERE productId = "${productId}"
     ORDER BY offerValue DESC
     ;`
@@ -42,8 +42,8 @@ exports.setOffer = async(req, res) =>{
     let q = `
     INSERT INTO OFFERS (sellerId, productId, offerValue, createdAt, updatedAt)
     VALUES((SELECT id
-    FROM USERS
-    WHERE users.email = '${userEmail}'
+    FROM Users
+    WHERE Users.email = '${userEmail}'
     ), '${productId}', '${offerValue}', '${createdAt}', '${updatedAt}')`;
     
     try{

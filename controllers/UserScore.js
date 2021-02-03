@@ -10,10 +10,10 @@ const {decodeToken} = require('./User');
 
 let getScoresByEmail = async(sellerIdEmail) =>{
     let q = `SELECT AVG(uScore) as score
-    FROM USERSCORES 
-    INNER JOIN USERS
-    ON users.id = userscores.userReceive
-    WHERE users.email='${sellerIdEmail}';`
+    FROM UserScores 
+    INNER JOIN Users
+    ON Users.id = UserScores.userReceive
+    WHERE Users.email='${sellerIdEmail}';`
     let score = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
     //console.log("score", score);
     return score;   
@@ -33,11 +33,11 @@ exports.getScore = async(req, res) => {
     } 
 }
 const scoredThisUser = async(userSend, userReceive) => {
-    console.log("------SCORED THIS USER");
+    //console.log("------SCORED THIS USER");
     //console.log("---------req.headers.authorization: ", req.headers.authorization);
     let msg = '';
     let q = `SELECT * 
-        FROM final1.userscores
+        FROM UserScores
         WHERE userReceive=? AND userSend=?`;
     try{
         msg = 'Score added.';
@@ -52,20 +52,20 @@ const scoredThisUser = async(userSend, userReceive) => {
 
 
 exports.addScore = async(req, res) =>{
-    console.log("ENTRA A ADDSCORE");
+    //console.log("ENTRA A ADDSCORE");
     let msg = '';
     let decodedToken = decodeToken(req.headers.authorization);
-    console.log("decodedToken ",decodedToken );
+    //console.log("decodedToken ",decodedToken );
     let {userReceive, uScore, createdAt, updatedAt} = req.body;
     if(decodedToken.id == userReceive) return res.status(401).json({error:"Cannot set score yourself"});
-    console.log("PRIMER IF");
+    //console.log("PRIMER IF");
     if(await scoredThisUser(decodedToken.id, userReceive)){
-        console.log("scoredThisUser(decodedToken.id, userReceive)", await scoredThisUser(decodedToken.id, userReceive));
-        console.log("you scored already");
+        //console.log("scoredThisUser(decodedToken.id, userReceive)", await scoredThisUser(decodedToken.id, userReceive));
+        //console.log("you scored already");
         return res.status(401).json({error:"You scored this user already"});
     } 
-    console.log("SEGUNDO IF");
-    let q = `INSERT INTO USERSCORES (userSend, userReceive, uScore, createdAt, updatedAt)
+    //console.log("SEGUNDO IF");
+    let q = `INSERT INTO UserScores (userSend, userReceive, uScore, createdAt, updatedAt)
         VALUES ('${decodedToken.id}', '${userReceive}', '${uScore}', '${createdAt}', '${updatedAt}')`;
     try{
         msg = 'Score added.';

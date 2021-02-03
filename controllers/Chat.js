@@ -3,6 +3,7 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 
+
 /**
  * Chat controller
  */
@@ -10,14 +11,14 @@ const chalk = require('chalk');
 let getChatByDestination = async(source, destination) =>{
     let q = `SELECT id, sourceemail, destinationemail, chatDate, message
     FROM 
-    (SELECT chats.id, src.email as sourceemail, dst.email destinationemail, chats.chatDate, message
-    FROM CHATS
-    JOIN USERS as src
-    ON CHATS.SOURCE = src.ID
-    JOIN USERS as dst
-    ON CHATS.destination = dst.ID
+    (SELECT Chats.id, src.email as sourceemail, dst.email destinationemail, Chats.chatDate, message
+    FROM Chats
+    JOIN Users as src
+    ON Chats.source = src.id
+    JOIN Users as dst
+    ON Chats.destination = dst.id
     WHERE (src.email=? AND dst.email=?) OR (src.email=? AND dst.email=?)
-    ORDER BY chats.id DESC
+    ORDER BY Chats.id DESC
     LIMIT 8) as table2
     ORDER BY table2.id ASC
     ;`;
@@ -50,7 +51,7 @@ exports.getChats = async(req, res) => {
 exports.sendMessage = async(req, res) =>{
     let msg = '';
     let {source, destination, chatDate, message, createdAt, updatedAt} = req.body;
-    let q = `INSERT INTO CHATS (source, destination, chatDate, 
+    let q = `INSERT INTO Chats (source, destination, chatDate, 
         message, createdAt, updatedAt)
         VALUES (${source}, '${ destination}', '${chatDate}',
         '${message}', '${createdAt}', '${updatedAt}')`;

@@ -8,7 +8,7 @@ const chalk = require('chalk');
  */
 
 let getAllOrders = async(req, res) =>{
-    let q = `SELECT * FROM ORDERS`
+    let q = `SELECT * FROM Orders`
     let orders = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
     //console.log("orders",orders);
     return orders;   
@@ -31,7 +31,7 @@ exports.getOrders = async(req, res) => {
 exports.addOrder = async(req, res) =>{
     let msg = '';
     let {userId, productId, orderNumber, orderDescription, orderDate, createdAt, updatedAt} = req.body;
-    let q = `INSERT INTO ORDERS (userId, productId, orderNumber, 
+    let q = `INSERT INTO Orders (userId, productId, orderNumber, 
         orderDescription, orderDate, createdAt, updatedAt)
         VALUES ('${userId}', '${productId}', '${orderNumber}', '${orderDescription}', 
         '${orderDate}', '${createdAt}', '${updatedAt}')`;

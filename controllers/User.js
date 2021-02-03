@@ -3,6 +3,7 @@ let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 const bcrypt = require('bcrypt');
+let passwordValidator = require('password-validator');
 
 /**
  * Users controller
@@ -30,14 +31,26 @@ exports.getUsers = async(req, res) => {
 
 exports.signUp = async (req, res) =>{
     let msg = 'User added.';
+    let schemaPasswordValidator = new passwordValidator();
+    schemaPasswordValidator
+        .is().min(8)                                    
+        .is().max(100)                                  
+        .has().uppercase()                              
+        .has().lowercase()                              
+        .has().digits(2)                                
+        .has().not().spaces()                           
+        .is().not().oneOf(['Passw0rd', 'Password123']);
     let {name, lastName, email, password,  role, birthDate, address, 
         phone, card, createdAt, updatedAt
     } = req.body;
+    
     let q = `INSERT INTO Users (name, lastName, email, password, role, birthDate, address, 
         phone, card, createdAt, updatedAt)
         VALUES (?, ?, ?, ?, ?, ?, ?, 
         ?, ?, ?, ?)`;
     try{
+        // if (!schemaPasswordValidator.validate(password)) return res.status(401).send({error:"weak password"});
+        if (!schemaPasswordValidator.validate(password)) return res.status(401).json({error:"weak password"});
         let userCreated = await sequelize.query(q, 
             {replacements: [name, lastName, email, bcrypt.hashSync(password, 6), role, birthDate, address,
             phone, card, createdAt, updatedAt],

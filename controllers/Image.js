@@ -8,7 +8,7 @@ const chalk = require('chalk');
  */
 
 let getImagesByProductId = async(productId) =>{
-    let q = `SELECT * FROM IMAGES WHERE productId='${productId}'`
+    let q = `SELECT * FROM Images WHERE productId='${productId}'`
     let images = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
     //console.log("images", images);
     return images;   
@@ -31,7 +31,7 @@ exports.addImage = async (req, res) =>{
     let msg = '';
     
     let {productId, path, createdAt, updatedAt} = req.body;
-    let q = `INSERT INTO IMAGES (productId, path, createdAt, updatedAt)
+    let q = `INSERT INTO Images (productId, path, createdAt, updatedAt)
         VALUES (${productId}, '${path}', '${createdAt}', '${updatedAt}')`;
     try{
         msg = 'Image added.';
