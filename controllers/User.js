@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
  */
 
 exports.getAllUsers = async(req, res) =>{
-    let q = `SELECT * FROM USERS`
+    let q = `SELECT * FROM Users`
     let users = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
     return users;   
 }
@@ -28,27 +28,28 @@ exports.getUsers = async(req, res) => {
 }
 
 
-exports.signUp = (req, res) =>{
+exports.signUp = async (req, res) =>{
     let msg = 'User added.';
     let {name, lastName, email, password,  role, birthDate, address, 
         phone, card, createdAt, updatedAt
     } = req.body;
-    let q = `INSERT INTO USERS (name, lastName, email, password, role, birthDate, address, 
+    let q = `INSERT INTO Users (name, lastName, email, password, role, birthDate, address, 
         phone, card, createdAt, updatedAt)
         VALUES (?, ?, ?, ?, ?, ?, ?, 
         ?, ?, ?, ?)`;
     try{
-        sequelize.query(q, 
+        let userCreated = await sequelize.query(q, 
             {replacements: [name, lastName, email, bcrypt.hashSync(password, 6), role, birthDate, address,
             phone, card, createdAt, updatedAt],
                 type: sequelize.QueryTypes.INSERT})
+        console.log("userCreated", userCreated);
         res.status(200)
-        .json({message:"Good" + msg});
+        .json({message:"Good" + msg, userCreated});
     }catch{
         res.status(400)
         .json({error:"Wrong"});
     }
-    return true;
+    return res;
 };
 
 let getUserByEmail = async(req, res) =>{
@@ -57,14 +58,14 @@ let getUserByEmail = async(req, res) =>{
     if(req.body.email) email = req.body.email;
     if(req.query.email) email = req.query.email;
     //console.log("getting user by email");
-    let q = `SELECT * FROM USERS WHERE email=?`;
+    let q = `SELECT * FROM Users WHERE email=?`;
     return sequelize.query(q, 
         {replacements: [email],
             type: sequelize.QueryTypes.SELECT})
 }
 
 exports.userHasProduct = async(userId, productId) =>{
-    let q = `SELECT * FROM PRODUCTS WHERE id=? AND sellerId=?`;
+    let q = `SELECT * FROM Products WHERE id=? AND sellerId=?`;
     return sequelize.query(q, 
         {replacements: [productId, userId],
             type: sequelize.QueryTypes.SELECT})
@@ -115,17 +116,17 @@ exports.login = async(req, res) =>{
             return false;
         }
     }catch{
-        res.status(400).json({"error":"error"})
+        res.status(401).json({"error":"error"})
         return false;
     }
 };
 
 exports.getListUsersAndProducts = async(req, res) =>{
-    let q = `SELECT users.name, users.lastName, users.email, users.birthDate, users.address, 
-    users.phone, products.title, products.price, products.createdAt
-    FROM USERS
-    LEFT JOIN PRODUCTS
-    ON USERS.id = PRODUCTS.sellerId`;
+    let q = `SELECT Users.name, Users.lastName, Users.email, Users.birthDate, Users.address, 
+    Users.phone, Products.title, Products.price, Products.createdAt
+    FROM Users
+    LEFT JOIN Products
+    ON Users.id = Products.sellerId`;
     try{
         let usersAndProducts = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
         //console.log("list", usersAndProducts);
