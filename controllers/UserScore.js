@@ -32,22 +32,19 @@ exports.getScore = async(req, res) => {
         return false;
     } 
 }
-const scoredThisUser = async(req, res) => {
-    console.log("SCORED");
+const scoredThisUser = async(userSend, userReceive) => {
+    console.log("------SCORED THIS USER");
+    //console.log("---------req.headers.authorization: ", req.headers.authorization);
     let msg = '';
-    let decodedToken = decodeToken(req.headers.authorization);
-    console.log("decodedToken ",decodedToken );
-    let {userReceive} = req.body;
     let q = `SELECT * 
         FROM final1.userscores
         WHERE userReceive=? AND userSend=?`;
     try{
         msg = 'Score added.';
         let score = await sequelize.query(q, 
-            {replacements: [decodedToken.id, userReceive]},
-            {type: sequelize.QueryTypes.INSERT})
-        console.log("SCORE: ", score);
-        return true;
+            {replacements: [userReceive, userSend]},
+            {type: sequelize.QueryTypes.SELECT})
+        return !!score[0].length;
     }catch{
         return false;
     }
@@ -62,7 +59,11 @@ exports.addScore = async(req, res) =>{
     let {userReceive, uScore, createdAt, updatedAt} = req.body;
     if(decodedToken.id == userReceive) return res.status(401).json({error:"Cannot set score yourself"});
     console.log("PRIMER IF");
-    if(scoredThisUser) return res.status(401).json({error:"You scored this user already"});
+    if(await scoredThisUser(decodedToken.id, userReceive)){
+        console.log("scoredThisUser(decodedToken.id, userReceive)", await scoredThisUser(decodedToken.id, userReceive));
+        console.log("you scored already");
+        return res.status(401).json({error:"You scored this user already"});
+    } 
     console.log("SEGUNDO IF");
     let q = `INSERT INTO USERSCORES (userSend, userReceive, uScore, createdAt, updatedAt)
         VALUES ('${decodedToken.id}', '${userReceive}', '${uScore}', '${createdAt}', '${updatedAt}')`;
