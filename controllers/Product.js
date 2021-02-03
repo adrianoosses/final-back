@@ -9,7 +9,7 @@ const chalk = require('chalk');
 
 
 let getAllProductPrev = async(req, res) => {
-    const page = req.query.page;
+    const page = req.query.page || 1;
     const numItems = 12;
     const offset = (page-1)*numItems;
     let q = `

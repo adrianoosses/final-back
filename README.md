@@ -54,7 +54,7 @@ nodemon app.js
 | GET | ```/user?email=<email>```| Return an user given email |  |  |
 | GET | ```/user/list``` | Return list of users and products por admin view |  | x |
 | POST | ```/product``` | Add a new product on DB |  |  |
-| GET | ```/product``` | Return all products on DB |  |  |
+| GET | ```/product?page=${page}``` | Return [12*(page-1), 12*(page-1) + 12] products on DB |  |  |
 | GET | ```/product/details?id=<id>```| Return an product given id |  |  |
 | DELETE | ```/product?id=<id>``` | Return products given id | x |  |
 | POST | ```/offer``` | Add a new offer on DB |  |  |

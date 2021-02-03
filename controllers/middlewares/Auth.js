@@ -136,7 +136,7 @@ exports.authOffer = (req, res, next) => {
     const token = req.headers.authorization;
     console.log("TOKEN: ", req.headers.authorization);
     if(decodeToken(token)){ 
-        let productId = req.query.id;
+        let productId = req.query.productid;
         let decodedToken = decodeToken(token);
         console.log("productId", productId);
         console.log("decodedToken", decodedToken.id);

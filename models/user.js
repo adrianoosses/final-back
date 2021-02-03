@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.User, {foreignKey: 'userId'})
-      this.belongsTo(models.User, {foreignKey: 'buyerId'})
+      //this.belongsTo(models.User, {foreignKey: 'userId'})
+      //this.belongsTo(models.User, {foreignKey: 'buyerId'})
     }
   };
   User.init({
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     card: DataTypes.BIGINT
   }, {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     modelName: 'User'
   });
   return User;

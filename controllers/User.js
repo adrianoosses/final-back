@@ -1,18 +1,17 @@
-const {sequelize} = require('../models/index.js');
+const {sequelize, User, Product} = require('../models/index.js');
 let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 const bcrypt = require('bcrypt');
 let passwordValidator = require('password-validator');
-
+//let User = require('../models/').User;
+//const { Sequelize, Model, DataTypes } = require("sequelize");
 /**
  * Users controller
  */
 
 exports.getAllUsers = async(req, res) =>{
-    let q = `SELECT * FROM Users`
-    let users = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-    return users;   
+    return await User.findAll();
 }
 
 exports.getUsers = async(req, res) => {
@@ -39,26 +38,31 @@ exports.signUp = async (req, res) =>{
         .has().lowercase()                              
         .has().digits(2)                                
         .has().not().spaces()                           
-        .is().not().oneOf(['Passw0rd', 'Password123']);
-    let {name, lastName, email, password,  role, birthDate, address, 
+        .is().not().oneOf(['Password123', 'Qwerty12345']);
+    let {name, lastName, email, password, roleDb, birthDate, address, 
         phone, card, createdAt, updatedAt
     } = req.body;
+    let role = roleDb || 'Client';
     
-    let q = `INSERT INTO Users (name, lastName, email, password, role, birthDate, address, 
-        phone, card, createdAt, updatedAt)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 
-        ?, ?, ?, ?)`;
     try{
-        // if (!schemaPasswordValidator.validate(password)) return res.status(401).send({error:"weak password"});
         if (!schemaPasswordValidator.validate(password)) return res.status(401).json({error:"weak password"});
-        let userCreated = await sequelize.query(q, 
-            {replacements: [name, lastName, email, bcrypt.hashSync(password, 6), role, birthDate, address,
-            phone, card, createdAt, updatedAt],
-                type: sequelize.QueryTypes.INSERT})
-        console.log("userCreated", userCreated);
+        const newUser = await User.create({ 
+                name: name, 
+                lastName: lastName, 
+                email: email,
+                password: bcrypt.hashSync(password, 6),
+                role: role,
+                birthDate: birthDate,
+                address: address,
+                phone: phone,
+                card: card,
+                createdAt: createdAt,
+                updatedAt: updatedAt
+        });
         res.status(200)
-        .json({message:"Good" + msg, userCreated});
-    }catch{
+        .json({message:"Good. " + msg, newUser});
+    }catch(error){
+        console.error(error);
         res.status(400)
         .json({error:"Wrong"});
     }
@@ -66,22 +70,27 @@ exports.signUp = async (req, res) =>{
 };
 
 let getUserByEmail = async(req, res) =>{
+    console.log("--------getUsersByEmail");
     let email = '';
-    //let {email} = req.body;
     if(req.body.email) email = req.body.email;
     if(req.query.email) email = req.query.email;
-    //console.log("getting user by email");
-    let q = `SELECT * FROM Users WHERE email=?`;
-    return sequelize.query(q, 
-        {replacements: [email],
-            type: sequelize.QueryTypes.SELECT})
+    const fUser =  await User.findAll({
+        where: {
+          email: email
+        }
+      });
+    console.log("fUser", fUser);
+    return fUser;
+
 }
 
 exports.userHasProduct = async(userId, productId) =>{
-    let q = `SELECT * FROM Products WHERE id=? AND sellerId=?`;
-    return sequelize.query(q, 
-        {replacements: [productId, userId],
-            type: sequelize.QueryTypes.SELECT})
+    return Product.findAll({
+        where: {
+          id: productId,
+          sellerId: userId
+        }
+      });
 }
 let generateToken = (user)=>{
     let newUser = {
@@ -105,7 +114,6 @@ exports.getUsers = async(req, res) => {
     try{
         if(req.query.email || req.query.email) user = await getUserByEmail(req, res);
         else user = await getAllUsers(req, res);
-        //console.log("user: ", user);
         res.status(200).json(user);
         return true;
     }catch{
@@ -115,11 +123,16 @@ exports.getUsers = async(req, res) => {
 }
 
 exports.login = async(req, res) =>{
+    console.log("--------login");
     try{
+        console.log("--------try");
         let password = req.body.password;
         let usrLogin = await getUserByEmail(req, res);
         const isValid = bcrypt.compareSync(password, usrLogin[0].password, 6);
-        //console.log( isValid);
+        console.log("password", req.body.password);
+        console.log("usrLogin", usrLogin);
+        console.log("isValid", isValid);
+
         if(usrLogin && isValid){
             let token = generateToken(usrLogin[0]);
             res.status(200).json({message:"Logged", token});
