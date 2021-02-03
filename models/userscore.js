@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   UserScore.init({
-    userId: DataTypes.INTEGER,
+    userSend: DataTypes.INTEGER,
+    userReceive: DataTypes.INTEGER,
     uScore: DataTypes.INTEGER
   }, {
     sequelize,
