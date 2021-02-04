@@ -35,7 +35,7 @@ npm install
 npx sequelize db:migrate
 ```
 ## DATA BASE
-![Database](images/diagram9.svg)
+![Database](images/diagram11.svg)
 <a name="run"></a>
 ## RUN
 Option 2: local enviorement
@@ -73,6 +73,8 @@ nodemon app.js
 - JavaScript
 - Node
 - Express
+- Axios
+- JWT
 
 <a name="author"></a>
 ## AUTHOR
