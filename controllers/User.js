@@ -129,9 +129,6 @@ exports.login = async(req, res) =>{
         let password = req.body.password;
         let usrLogin = await getUserByEmail(req, res);
         const isValid = bcrypt.compareSync(password, usrLogin[0].password, 6);
-        console.log("password", req.body.password);
-        console.log("usrLogin", usrLogin);
-        console.log("isValid", isValid);
 
         if(usrLogin && isValid){
             let token = generateToken(usrLogin[0]);
@@ -162,4 +159,23 @@ exports.getListUsersAndProducts = async(req, res) =>{
         res.status(400).json({"error":"error"})
         return false;
     }
+};
+
+exports.deleteUser = async (req, res) =>{
+    let msg = '';
+    let {id} = req.query;
+    let q = `DELETE FROM Users
+            WHERE id = ?`;
+    try{
+        msg = 'User deleted';
+        await sequelize.query(q, {
+            replacements: [id],
+            type: sequelize.QueryTypes.DELETE})
+        res.status(200)
+        .json({message:"Good: " + msg});
+    }catch{
+        res.status(400)
+        .json({error:"Wrong"});
+    }
+    return true;
 };
