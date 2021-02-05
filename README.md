@@ -72,9 +72,13 @@ nodemon app.js
 ## TECHNOLOGIES USED
 - JavaScript
 - Node
+- Sequelize
+- MySQL
 - Express
 - Axios
 - JWT
+- BCRYPT
+- DOTENV
 
 <a name="author"></a>
 ## AUTHOR
