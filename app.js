@@ -12,6 +12,7 @@ const wss = new WebSocket.Server({server:server});
 let us = require('./routes/user.js');
 let product = require('./routes/product.js');
 let chat = require('./routes/chat.js');
+//let chatController = require('./controllers/Chat');
 let image = require('./routes/image.js');
 let userScore = require('./routes/userScore.js');
 let offer = require('./routes/offer.js');
@@ -20,8 +21,10 @@ let productFavorite = require('./routes/productFavorite.js');
 let cors = require('cors');
 
 wss.on('connection', function connection(ws){
-    console.log("A new client connected");
-    ws.send("HOLAAA cliente");
+    //console.log("A new client connected");
+    //let objToSend = {msg: "A new client connected"}
+    //ws.send(JSON.stringify(objToSend));
+    //ws.send("A new client connected");
 
     ws.on('message', function incoming(message){
         console.log("Received:", message);
@@ -32,6 +35,7 @@ wss.on('connection', function connection(ws){
         })
     })
 });
+
 
 // asignacion del puerto 3000 para el servidor
 const PORT = process.env.PORT || 3001;

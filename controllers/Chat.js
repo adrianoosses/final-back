@@ -8,10 +8,29 @@ const app = express();
 const server = require('http').createServer(app);
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({server:server});
-
 /**
  * Chat controller
  */
+
+ /*
+wss.on('connection', function connection(ws){
+    console.log("A new client connected");
+    ws.send("A new client connected");
+
+    ws.on('message', function incoming(message){
+        console.log("Received:", message);
+        wss.clients.forEach(function each(client){
+            if(client !== ws && client.readyState === WebSocket.OPEN){
+                client.send(message);
+            }
+        })
+    })
+});
+
+*/
+
+
+
 let reverseOrder = (arr) => {
     let tmp = '';
     for (let i = 0; i < arr.length/2; i++){
@@ -47,17 +66,6 @@ let getChatByDestination = async(source, destination) => {
 
 exports.getChats = async(req, res) => {
     let chats = '';
-    
-    wss.on('connection', function connection(ws){
-        console.log("A new client connected");
-        ws.send("HOLAAA cliente");
-    
-        ws.on('message', function incoming(message){
-            console.log("Received:", message);
-            ws.send("Hola2", message);
-        })
-    });
-    
 
     try{
         let destination = req.query.dstemail;
