@@ -11,5 +11,6 @@ const {simpleAuth, authOffer} = require('../controllers/middlewares/Auth');
 
 router.post('/', simpleAuth, setOffer);
 router.get('/',  authOffer, getOffer);
+//router.get('/', getOffer);
 
 exports.routes = router;

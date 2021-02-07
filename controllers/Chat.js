@@ -1,48 +1,73 @@
-const {sequelize} = require('../models/index.js');
+const {sequelize, Chat, User} = require('../models/index.js');
 let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
-const chalk = require('chalk');
-
+const {getUserByGivenEmail, decodeToken} = require('./User');
+const { Op } = require("sequelize");
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({server:server});
 
 /**
  * Chat controller
  */
-
-let getChatByDestination = async(source, destination) =>{
-    let q = `SELECT id, sourceemail, destinationemail, chatDate, message
-    FROM 
-    (SELECT Chats.id, src.email as sourceemail, dst.email destinationemail, Chats.chatDate, message
-    FROM Chats
-    JOIN Users as src
-    ON Chats.source = src.id
-    JOIN Users as dst
-    ON Chats.destination = dst.id
-    WHERE (src.email=? AND dst.email=?) OR (src.email=? AND dst.email=?)
-    ORDER BY Chats.id DESC
-    LIMIT 8) as table2
-    ORDER BY table2.id ASC
-    ;`;
-    let chats = await sequelize.query(q, 
-        {replacements: [source, destination, destination, source],
-            type: sequelize.QueryTypes.SELECT})
-    //console.log("chats",chats);
-    return chats;
+let reverseOrder = (arr) => {
+    let tmp = '';
+    for (let i = 0; i < arr.length/2; i++){
+        tmp = arr[i];
+        arr[i] = arr[arr.length - i -1];
+        arr[arr.length - i - 1] = tmp;
+    }
+    return arr;
+}
+let getChatByDestination = async(source, destination) => {
+    try{
+        const chatsDesc = await Chat.findAll({       
+            attributes: ['source', 'destination', 'chatDate', 'message'],
+            where: {
+                [Op.or]: [
+                    {source:source, destination:destination},
+                    {source:destination, destination:source}
+                ]},
+            include: [{
+                model: User,
+                attributes: ['id', 'name', 'email']
+            }],
+            order: [['chatDate', 'DESC']],
+            limit: 8,
+        });
+        let resul = reverseOrder(chatsDesc);
+        return resul;
+    }catch(error){
+        console.error(error);
+    }
+    
 }
 
 exports.getChats = async(req, res) => {
-    //let chats = "";
-    console.log("---------------ENTRA CHATS!");
+    let chats = '';
+    
+    wss.on('connection', function connection(ws){
+        console.log("A new client connected");
+        ws.send("HOLAAA cliente");
+    
+        ws.on('message', function incoming(message){
+            console.log("Received:", message);
+            ws.send("Hola2", message);
+        })
+    });
+    
+
     try{
-        let destinationEmail = req.query.dstemail;
-        //console.log("destinationEmail",destinationEmail);
-        let sourceEmail = req.query.srcemail; // token
-        
-        //console.log("sourceEmail",sourceEmail)
-        chats = await getChatByDestination(sourceEmail, destinationEmail);
-        //console.log("chats: ",chats);
+        let destination = req.query.dstemail;
+        let dest = await getUserByGivenEmail(destination);
+        const token = req.headers.authorization;
+        let decodedToken = decodeToken(token);
+        chats = await getChatByDestination(decodedToken.id, dest[0].dataValues.id);
         res.json(chats);
         return true;
-    }catch{
+    }catch(error){
         res.status(400).json({"Error":chats});
         return false;
     } 
@@ -51,19 +76,16 @@ exports.getChats = async(req, res) => {
 exports.sendMessage = async(req, res) =>{
     let msg = '';
     let {source, destination, chatDate, message, createdAt, updatedAt} = req.body;
-    let q = `INSERT INTO Chats (source, destination, chatDate, 
-        message, createdAt, updatedAt)
-        VALUES (${source}, '${ destination}', '${chatDate}',
-        '${message}', '${createdAt}', '${updatedAt}')`;
+    
     try{
         msg = 'Message sent.';
-        let chat = await sequelize.query(q, {type: sequelize.QueryTypes.INSERT})
-        res.status(200)
-        .json({message:"Good" + msg});
+        const newChat = await Chat.create({ 
+            source, destination, chatDate, message, createdAt, updatedAt
+        });
+        res.status(200).json({message:"Good" + msg});
         return true;
     }catch{
-        res.status(400)
-        .json({error:"Wrong"});
+        res.status(400).json({error:"Wrong"});
         return false;
     }
 };

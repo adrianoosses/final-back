@@ -28,7 +28,9 @@ exports.simpleAuth = (req, res, next) => {
     try{
         let decodif = decodeToken(req.headers.authorization);
         console.log("decodif", decodif);
-        if(decodeToken(req.headers.authorization)) next();    
+        if(decodeToken(req.headers.authorization)){
+            next(); 
+        }    
         else return res.status(401).json({error:error})
     } catch(error){
         return res.status(402).json({error:error});
@@ -78,27 +80,21 @@ exports.authChatSend = (req, res, next) => {
 exports.authProduct = (req, res, next) => {
     if(req.query.id){
         const token = req.headers.authorization;
-        console.log("TOKEN: ", req.headers.authorization);
         if(decodeToken(token)){ 
             let productId = req.query.id;
             let decodedToken = decodeToken(token);
-            console.log("productId", productId);
-            console.log("decodedToken", decodedToken.id);
             if(userHasProduct(decodedToken.id, productId)) next(); 
             else return res.status(400).json({error:"Error"}); 
         }else{
             return res.status(400).json({error:"Error"});
         }
     } else {
-        //console.log("NEXT");
-        //next();
         return res.status(400).json({error:"Error"});
     }
 }
 
 exports.authOffer = (req, res, next) => {
-    const token = req.headers.authorization;
-    console.log("TOKEN: ", req.headers.authorization);
+    const token = req.headers.authorization; 
     if(decodeToken(token)){ 
         let productId = req.query.productid;
         let decodedToken = decodeToken(token);

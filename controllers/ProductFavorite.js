@@ -1,37 +1,41 @@
-const {sequelize} = require('../models/index.js');
+const {sequelize, ProductFavorite, Product, User} = require('../models/index.js');
 let jwt = require('jsonwebtoken');
 let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
+const user = require('../models/user.js');
+let {decodeToken} = require('../controllers/User');
 
 /**
  * ProductFavorite controller
  */
 
-let getFavoriteByEmail = async(userEmail) =>{
-    let q = `SELECT Products.id, sellerId, title, mainImage, description, price, sellDate, productStatus, usr.name, usr.email, category,
-    Products.createdAt, Products.updatedAt
-    FROM Products
-    INNER JOIN (
-		SELECT productId, userId
-		FROM ProductFavorites
-		INNER JOIN Users
-		ON Users.id = ProductFavorites.userId
-		WHERE Users.email = ?) AS prodFav
-        ON prodFav.productId = Products.id 
-	INNER JOIN Users as usr
-		ON Products.sellerId = usr.id;`
-    let favorite = await sequelize.query(q, {replacements: [userEmail],
-        type: sequelize.QueryTypes.SELECT})
-    //console.log("favorite", favorite);
-    return favorite;   
+
+let getFavorites = async(userId) =>{
+    try{
+        const favorite = await Product.findAll({ 
+            attributes: ['id', 'sellerId', 'title', 'mainImage', 'description', 'price', 'sellDate', 
+            'productStatus', 'category'],
+            include: [{
+                model: ProductFavorite,
+                where: {userId:userId},
+                include: [{
+                    model: User,
+                    attributes: ['name', 'email']
+                }]
+            }]
+        });
+        return favorite; 
+    }catch(error){
+        console.error(error);
+    }
 }
 
 exports.getFavorite = async(req, res) => {
     let favorite = "";
+    const token = req.headers.authorization;
+    let decodedToken = decodeToken(token);
     try{
-        //console.log("email: ", req.query);
-        const favorite = await getFavoriteByEmail(req.query.email);
-        //console.log("favorite: ", favorite);
+        const favorite = await getFavorites(decodedToken.id);
         res.json(favorite);
         return true;
     }catch{
@@ -42,17 +46,14 @@ exports.getFavorite = async(req, res) => {
 
 exports.setFavorite = async(req, res) =>{
     let msg = '';
-    let {userEmail, productId, createdAt, updatedAt} = req.body;
-    let q = `
-    INSERT INTO ProductFavorites (userId, productId, createdAt, updatedAt)
-    VALUES((SELECT id
-    FROM Users
-    WHERE Users.email = '${userEmail}'
-    ), '${productId}', '${createdAt}', '${updatedAt}')`;
-    
+    const token = req.headers.authorization;
+    let decodedToken = decodeToken(token);
+    let {productId, createdAt, updatedAt} = req.body;
     try{
         msg = 'Favorite added.';
-        let favorite = await sequelize.query(q, {type: sequelize.QueryTypes.INSERT})
+        const newFavorite = await ProductFavorite.create({ 
+            userId:decodedToken.id, productId, createdAt, updatedAt
+        });
         res.status(200)
         .json({message:"Good" + msg});
         return true;
@@ -67,11 +68,9 @@ exports.setFavorite = async(req, res) =>{
 exports.deleteProductFavorite = async(req, res) =>{
     let msg = '';
     let {productid} = req.query;
-    let q = `
-    DELETE FROM ProductFavorites WHERE productId = '${productid}'`;
     try{
         msg = 'Favorite added.';
-        let favorite = await sequelize.query(q,{type: sequelize.QueryTypes.DELETE})
+        await ProductFavorite.destroy({where:{productId:productid}});
         res.status(200)
         .json({message:"Good" + msg});
         return true;

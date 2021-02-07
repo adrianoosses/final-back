@@ -12,5 +12,6 @@ const {simpleAuth, authProduct, guessAuth} = require('../controllers/middlewares
 router.post('/', simpleAuth, addProduct);
 router.get('/', guessAuth, getProducts);
 router.get('/details', guessAuth, getProductById);
-router.delete('/', authProduct, deleteProduct);
+//router.delete('/', authProduct, deleteProduct);
+router.delete('/', deleteProduct);
 exports.routes = router;

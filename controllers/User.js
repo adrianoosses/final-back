@@ -4,8 +4,7 @@ let claveToken = "fdfdkjfd.sa#fjpdfjkl";
 const chalk = require('chalk');
 const bcrypt = require('bcrypt');
 let passwordValidator = require('password-validator');
-//let User = require('../models/').User;
-//const { Sequelize, Model, DataTypes } = require("sequelize");
+
 /**
  * Users controller
  */
@@ -18,7 +17,6 @@ exports.getUsers = async(req, res) => {
     let user = "";
     try{
         user = await getAllUsers(req, res);
-        //console.log("user: ", user);
         res.status(200).json(user);
         return true;
     }catch{
@@ -69,8 +67,7 @@ exports.signUp = async (req, res) =>{
     return res;
 };
 
-let getUserByEmail = async(req, res) =>{
-    console.log("--------getUsersByEmail");
+const getUserByEmail = async(req, res) =>{
     let email = '';
     if(req.body.email) email = req.body.email;
     if(req.query.email) email = req.query.email;
@@ -81,17 +78,34 @@ let getUserByEmail = async(req, res) =>{
       });
     console.log("fUser", fUser);
     return fUser;
+}
+
+exports.getUserByGivenEmail = async(email) =>{
+    const fUser =  await User.findAll({
+        where: {
+          email: email
+        }
+      });
+    console.log("fUser", fUser);
+    return fUser;
+}
+
+exports.getUserByEmailQ = async(req, res) => {
+    return getUserByEmail(req, res);
 
 }
 
 exports.userHasProduct = async(userId, productId) =>{
     return Product.findAll({
+        attributes: ['id', 'title', 'price', 'description', 'sellDate', 'productStatus', 
+        'mainImage', 'sellerId', 'category'],
         where: {
           id: productId,
           sellerId: userId
         }
       });
 }
+
 let generateToken = (user)=>{
     let newUser = {
         id:user.id,
@@ -123,9 +137,7 @@ exports.getUsers = async(req, res) => {
 }
 
 exports.login = async(req, res) =>{
-    console.log("--------login");
     try{
-        console.log("--------try");
         let password = req.body.password;
         let usrLogin = await getUserByEmail(req, res);
         const isValid = bcrypt.compareSync(password, usrLogin[0].password, 6);
@@ -138,22 +150,24 @@ exports.login = async(req, res) =>{
             res.status(400).json({error:"Wrong user or password "});
             return false;
         }
-    }catch{
+    }catch(error){
+        console.error(error);
         res.status(401).json({"error":"error"})
         return false;
     }
 };
 
 exports.getListUsersAndProducts = async(req, res) =>{
-    let q = `SELECT Users.name, Users.lastName, Users.email, Users.birthDate, Users.address, 
-    Users.phone, Products.title, Products.price, Products.createdAt
-    FROM Users
-    LEFT JOIN Products
-    ON Users.id = Products.sellerId`;
+   const products = await User.findAll({ 
+        attributes: ['id', 'name', 'email'],
+        include: [{
+            model: Product, 
+            attributes: ['id', 'title', 'price', 'description', 'sellDate', 'productStatus', 'mainImage', 'sellerId', 'category']
+        }]
+    });
+    
     try{
-        let usersAndProducts = await sequelize.query(q, {type: sequelize.QueryTypes.SELECT})
-        //console.log("list", usersAndProducts);
-        res.status(200).json(usersAndProducts);
+        res.status(200).json(products);
         return true;
     }catch{
         res.status(400).json({"error":"error"})
@@ -164,18 +178,13 @@ exports.getListUsersAndProducts = async(req, res) =>{
 exports.deleteUser = async (req, res) =>{
     let msg = '';
     let {id} = req.query;
-    let q = `DELETE FROM Users
-            WHERE id = ?`;
+    
     try{
         msg = 'User deleted';
-        await sequelize.query(q, {
-            replacements: [id],
-            type: sequelize.QueryTypes.DELETE})
-        res.status(200)
-        .json({message:"Good: " + msg});
+        await User.destroy({where:{id}});
+        res.status(200).json({message:"Good: " + msg});
     }catch{
-        res.status(400)
-        .json({error:"Wrong"});
+        res.status(400).json({error:"Wrong"});
     }
     return true;
 };

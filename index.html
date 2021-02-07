@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>chat</title>
+<body>
+
+    Mandar
+    <button onclick="sendMessage()">Send msg</button>
+</body>
+<script>
+  const socket = new WebSocket('ws://localhost:3001');
+
+  socket.addEventListener('open', function(event){
+      socket.send("no se");
+  });
+
+  socket.addEventListener('message', function(event){
+      console.log("message", event.data);
+  });
+
+  const sendMessage = () => {
+      socket.send("hello from client1");
+  }
+
+</script>
+</html>
