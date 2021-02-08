@@ -11,7 +11,7 @@ Front part on: https://github.com/adrianoosses/final-front
 <a name="set-up"></a>
 ## SET UP
 <a name="db"></a>
-### Option 1: Heroku
+### Option 1: Heroku: https://mejorprecio-back.herokuapp.com
 ### Option 2: local
 1. Clone the repository into your machine 
 ```
