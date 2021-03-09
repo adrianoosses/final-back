@@ -1,4 +1,3 @@
-'use strict';
 const {
   Model
 } = require('sequelize');
@@ -11,14 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Product, {foreignKey: 'productId'})
-      this.belongsTo(models.User, {foreignKey: 'sellerId'})
+      this.belongsTo(models.Product, { foreignKey: 'productId' })
+      this.belongsTo(models.User, { foreignKey: 'sellerId' })
     }
   };
   Offer.init({
     sellerId: DataTypes.INTEGER,
     productId: DataTypes.INTEGER,
-    offerValue: DataTypes.DOUBLE
+    offerValue: DataTypes.DOUBLE,
   }, {
     sequelize,
     modelName: 'Offer',

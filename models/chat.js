@@ -1,4 +1,3 @@
-'use strict';
 const {
   Model
 } = require('sequelize');
@@ -11,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.User, {foreignKey: 'source'});
+      this.belongsTo(models.User, { foreignKey: 'source' });
       //this.belongsTo(models.User, {foreignKey: 'destination'});
     }
   };

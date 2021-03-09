@@ -1,4 +1,3 @@
-'use strict';
 const {
   Model
 } = require('sequelize');
@@ -11,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.Product, {foreignKey: 'sellerId'});
-      this.hasMany(models.Offer, {foreignKey: 'sellerId'});
-      this.hasMany(models.ProductFavorite, {foreignKey: 'userId'});
-      this.hasMany(models.UserScore, {foreignKey: 'userSend'});
-      this.hasMany(models.UserScore, {foreignKey: 'userReceive'});
-      this.hasMany(models.Chat, {foreignKey: 'source'});
+      this.hasMany(models.Product, { foreignKey: 'sellerId' });
+      this.hasMany(models.Offer, { foreignKey: 'sellerId' });
+      this.hasMany(models.ProductFavorite, { foreignKey: 'userId' });
+      this.hasMany(models.UserScore, { foreignKey: 'userSend' });
+      this.hasMany(models.UserScore, { foreignKey: 'userReceive' });
+      this.hasMany(models.Chat, { foreignKey: 'source' });
       //this.hasMany(models.Chat, {foreignKey: 'destination'});
     }
   };

@@ -45,8 +45,8 @@ const getChatByDestination = async (source, destination) => {
                 [Op.or]: [
                     { source, destination },
                     { source: destination, destination: source },
-                ] },
-
+                ],
+			},
             include: [{
                 model: User,
                 attributes: ['id', 'name', 'email'],
@@ -58,38 +58,39 @@ const getChatByDestination = async (source, destination) => {
     } catch (error) {
         console.error(error);
 		return false;
-    }  
-}
+    }
+};
 
-exports.getChats = async(req, res) => {
+exports.getChats = async (req, res) => {
     let chats = '';
     try {
-        let destination = req.query.dstemail;
-        let dest = await getUserByGivenEmail(destination);
+        const destination = req.query.dstemail;
+        const dest = await getUserByGivenEmail(destination);
         const token = req.headers.authorization;
-        let decodedToken = decodeToken(token);
+        const decodedToken = decodeToken(token);
         chats = await getChatByDestination(decodedToken.id, dest[0].dataValues.id);
         res.json(chats);
         return true;
     } catch (error) {
         res.status(400).json({ error: chats });
         return false;
-    } 
-}
+    }
+};
 
-exports.sendMessage = async(req, res) =>{
+exports.sendMessage = async (req, res) => {
     let msg = '';
-    let {source, destination, chatDate, message, createdAt, updatedAt} = req.body;
-    
+    const {
+		source, destination, chatDate, message, createdAt, updatedAt,
+	} = req.body;
     try {
         msg = 'Message sent.';
-        await Chat.create({ 
-            source, destination, chatDate, message, createdAt, updatedAt
+        await Chat.create({
+            source, destination, chatDate, message, createdAt, updatedAt,
         });
-        res.status(200).json({message:"Good" + msg});
+        res.status(200).json({ message: `Good: ${msg}` });
         return true;
     } catch {
-        res.status(400).json({error: 'Wrong' });
+        res.status(400).json({ error: 'Wrong' });
         return false;
     }
 };

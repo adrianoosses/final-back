@@ -58,7 +58,7 @@ exports.getProducts = async (req, res) => {
 
 const getProductByIdQ = async (id) => {
     const products = await Product.findAll({
-        attributes: ['id', 'title', 'price', 'description', 'sellDate', 'productStatus', 'mainImage', 
+        attributes: ['id', 'title', 'price', 'description', 'sellDate', 'productStatus', 'mainImage',
         'sellerId', 'category'],
         where: { id },
         include: [{
@@ -66,13 +66,13 @@ const getProductByIdQ = async (id) => {
             attributes: ['id', 'name', 'email'],
         }],
     });
-    return products;   
-}
+    return products;
+};
 
 exports.getProductById = async (req, res) => {
-    let product = "";
+    let product = '';
     try {
-        if(req.query.id) product = await getProductByIdQ(req.query.id);
+        if (req.query.id) product = await getProductByIdQ(req.query.id);
         res.status(200).json(product);
         return true;
     } catch {
@@ -87,36 +87,44 @@ exports.getProductById = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
     const token = req.headers.authorization;
-    let decodedToken = decodeToken(token);
+    const decodedToken = decodeToken(token);
     let msg = '';
-    let {title, description, mainImage, price, sellDate, productStatus, createdAt, updatedAt} = req.body;
-    
+    const {
+		title, description, mainImage, price, sellDate, productStatus, createdAt, updatedAt,
+	} = req.body;
     try {
-        await Product.create({ 
-            sellerId:decodedToken.id, 
-            title, price, description, sellDate, productStatus, mainImage, createdAt, updatedAt
+        await Product.create({
+            sellerId: decodedToken.id,
+			title,
+			price,
+			description,
+			sellDate,
+			productStatus,
+			mainImage,
+			createdAt,
+			updatedAt,
         });
-        /*let q2 = `INSERT INTO Images (productId, path, createdAt, updatedAt) 
-            VALUES((SELECT MAX(id) FROM Products), ?, ?, ?);`;*/
-        msg = 'Product added.'; 
+        /* let q2 = `INSERT INTO Images (productId, path, createdAt, updatedAt)
+            VALUES((SELECT MAX(id) FROM Products), ?, ?, ?);`; */
+        msg = 'Product added.';
         res.status(200)
-        .json({message:"Good: " + msg});
+        .json({ message: `Good: ${msg}` });
     } catch {
         res.status(400)
-        .json({error:"Wrong"});
+        .json({ error: 'Wrong' });
     }
     return true;
 };
 
-exports.deleteProduct = async (req, res) =>{
+exports.deleteProduct = async (req, res) => {
     let msg = '';
-    let {id} = req.query;
+    const { id } = req.query;
     try {
-        await Product.destroy({where:{id}});
+        await Product.destroy({ where: { id } });
         msg = 'Product deleted';
-        res.status(200).json({message:"Good: " + msg});
+        res.status(200).json({ message: `Good: ${msg}` });
     } catch {
-        res.status(400).json({error:"Wrong"});
+        res.status(400).json({ error: 'Wrong' });
     }
     return true;
 };
