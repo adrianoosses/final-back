@@ -1,100 +1,98 @@
-const {sequelize, Product, User} = require('../models/index.js');
-let jwt = require('jsonwebtoken');
-let claveToken = "fdfdkjfd.sa#fjpdfjkl";
-const chalk = require('chalk');
-let {decodeToken} = require('../controllers/User');
+const { Product, User } = require('../models/index.js');
+const { decodeToken } = require('./User');
 
 /**
  * Products controller
  */
-let getAllProductPrev = async(req, res) => {
-    try{
+const getAllProductPrev = async (req) => {
+    try {
         const page = req.query.page || 1;
         const numItems = 12;
-        const offset = (page-1)*numItems;
-        const products = await Product.findAll({ 
+        const offset = (page - 1) * numItems;
+        const products = await Product.findAll({
             attributes: ['id', 'title', 'price', 'description', 'sellDate', 'productStatus', 'mainImage'],
-            offset: offset, 
+            offset,
             limit: numItems,
             include: [{
                 model: User,
-                attributes: ['id', 'name', 'email']
-            }]
+                attributes: ['id', 'name', 'email'],
+            }],
         });
         return products;
-    }catch(error){
+    } catch (error) {
         console.error(error);
+		return false;
     }
-}
+};
 
-
-
-let getProductByUserEmail = async(email) =>{
-    try{
-        const products = await Product.findAll({ 
-            attributes: ['id', 'title', 'price', 'description', 'sellDate', 'productStatus', 'mainImage', 
+const getProductByUserEmail = async (email) => {
+    try {
+        const products = await Product.findAll({
+            attributes: ['id', 'title', 'price', 'description', 'sellDate', 'productStatus', 'mainImage',
             'sellerId', 'category'],
             include: [{
                 model: User,
                 attributes: ['id', 'name', 'email'],
-                where: {email}
-            }]
+                where: { email },
+            }],
         });
         return products;
-    }catch(error){
+    } catch (error) {
         console.error(error);
+		return false;
     }
-}
+};
 
-exports.getProducts = async(req, res) => {
-    let products = "";
-    try{
-        if(req.query.email) products = await getProductByUserEmail(req.query.email);
-        else products = await getAllProductPrev(req, res);
+exports.getProducts = async (req, res) => {
+    let products = '';
+    try {
+        if (req.query.email) products = await getProductByUserEmail(req.query.email);
+        else products = await getAllProductPrev(req);
         res.status(200).json(products);
         return true;
-    }catch{
-        res.status(400).json({"Error":products});
+    } catch {
+        res.status(400).json({ error: products });
         return false;
-    } 
-}
-let getProductByIdQ = async(id) =>{
-    const products = await Product.findAll({ 
+    }
+};
+
+const getProductByIdQ = async (id) => {
+    const products = await Product.findAll({
         attributes: ['id', 'title', 'price', 'description', 'sellDate', 'productStatus', 'mainImage', 
         'sellerId', 'category'],
-        where: {id:id},
+        where: { id },
         include: [{
             model: User,
-            attributes: ['id', 'name', 'email']
-        }]
+            attributes: ['id', 'name', 'email'],
+        }],
     });
     return products;   
 }
 
-exports.getProductById = async(req, res) => {
+exports.getProductById = async (req, res) => {
     let product = "";
-    try{
+    try {
         if(req.query.id) product = await getProductByIdQ(req.query.id);
         res.status(200).json(product);
         return true;
-    }catch{
-        res.status(400).json({"Error":product});
+    } catch {
+        res.status(400).json({ error: product });
         return false;
-    } 
-}
+    }
+};
 
 /**
  * Set one image on both tables products and images
  */
 
-exports.addProduct = async (req, res) =>{
+exports.addProduct = async (req, res) => {
     const token = req.headers.authorization;
     let decodedToken = decodeToken(token);
     let msg = '';
     let {title, description, mainImage, price, sellDate, productStatus, createdAt, updatedAt} = req.body;
     
-    try{
-        const newProduct = await Product.create({ 
+    try {
+        await Product.create({ 
             sellerId:decodedToken.id, 
             title, price, description, sellDate, productStatus, mainImage, createdAt, updatedAt
         });
@@ -103,7 +101,7 @@ exports.addProduct = async (req, res) =>{
         msg = 'Product added.'; 
         res.status(200)
         .json({message:"Good: " + msg});
-    }catch{
+    } catch {
         res.status(400)
         .json({error:"Wrong"});
     }
@@ -113,11 +111,11 @@ exports.addProduct = async (req, res) =>{
 exports.deleteProduct = async (req, res) =>{
     let msg = '';
     let {id} = req.query;
-    try{
+    try {
         await Product.destroy({where:{id}});
         msg = 'Product deleted';
         res.status(200).json({message:"Good: " + msg});
-    }catch{
+    } catch {
         res.status(400).json({error:"Wrong"});
     }
     return true;
