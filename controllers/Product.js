@@ -9,7 +9,6 @@ let {decodeToken} = require('../controllers/User');
  */
 let getAllProductPrev = async(req, res) => {
     try{
-        console.log("getAllProductPrev");
         const page = req.query.page || 1;
         const numItems = 12;
         const offset = (page-1)*numItems;

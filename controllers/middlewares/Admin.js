@@ -1,4 +1,4 @@
-const {decodeToken} = require('../User');
+const { decodeToken } = require('../User');
 
 /**
  * Admin middleware

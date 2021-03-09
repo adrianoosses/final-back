@@ -1,13 +1,11 @@
-const {sequelize, Chat, User} = require('../models/index.js');
-let jwt = require('jsonwebtoken');
-let claveToken = "fdfdkjfd.sa#fjpdfjkl";
+const { Chat, User} = require('../models/index.js');
 const {getUserByGivenEmail, decodeToken} = require('./User');
 const { Op } = require("sequelize");
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({server:server});
+//const wss = new WebSocket.Server({server:server});
 /**
  * Chat controller
  */
@@ -87,7 +85,7 @@ exports.sendMessage = async(req, res) =>{
     
     try{
         msg = 'Message sent.';
-        const newChat = await Chat.create({ 
+        await Chat.create({ 
             source, destination, chatDate, message, createdAt, updatedAt
         });
         res.status(200).json({message:"Good" + msg});

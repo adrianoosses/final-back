@@ -26,8 +26,6 @@ exports.auth = (req, res, next) => {
  */
 exports.simpleAuth = (req, res, next) => {
     try{
-        let decodif = decodeToken(req.headers.authorization);
-        console.log("decodif", decodif);
         if(decodeToken(req.headers.authorization)){
             next(); 
         }    

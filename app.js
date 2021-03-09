@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express');
-const mysql = require('mysql2/promise');
+
 const app = express();
 //const http = require('http').Server(app);
 //const io = require('socket.io')(http);
@@ -27,7 +27,7 @@ wss.on('connection', function connection(ws){
     //ws.send("A new client connected");
 
     ws.on('message', function incoming(message){
-        console.log("Received:", message);
+        //console.log("Received:", message);
         wss.clients.forEach(function each(client){
             if(client !== ws && client.readyState === WebSocket.OPEN){
                 client.send(message);

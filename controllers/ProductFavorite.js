@@ -1,32 +1,28 @@
-const {sequelize, ProductFavorite, Product, User} = require('../models/index.js');
-let jwt = require('jsonwebtoken');
-let claveToken = "fdfdkjfd.sa#fjpdfjkl";
-const chalk = require('chalk');
-const user = require('../models/user.js');
-let {decodeToken} = require('../controllers/User');
+const { ProductFavorite, Product, User } = require('../models/index.js');
+const { decodeToken } = require('./User');
 
 /**
  * ProductFavorite controller
  */
 
-
-let getFavorites = async(userId) =>{
-    try{
-        const favorite = await Product.findAll({ 
-            attributes: ['id', 'sellerId', 'title', 'mainImage', 'description', 'price', 'sellDate', 
+const getFavorites = async (userId) => {
+    try {
+        const favorite = await Product.findAll({
+            attributes: ['id', 'sellerId', 'title', 'mainImage', 'description', 'price', 'sellDate',
             'productStatus', 'category'],
             include: [{
                 model: ProductFavorite,
-                where: {userId:userId},
+                where: { userId },
                 include: [{
                     model: User,
-                    attributes: ['name', 'email']
-                }]
-            }]
+                    attributes: ['name', 'email'],
+                }],
+            }],
         });
-        return favorite; 
-    }catch(error){
+        return favorite;
+    } catch (error) {
         console.error(error);
+		return false;
     }
 }
 

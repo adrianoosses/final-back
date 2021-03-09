@@ -1,7 +1,4 @@
 const {sequelize} = require('../models/index.js');
-let jwt = require('jsonwebtoken');
-let claveToken = "fdfdkjfd.sa#fjpdfjkl";
-const chalk = require('chalk');
 
 /**
  * Image controller

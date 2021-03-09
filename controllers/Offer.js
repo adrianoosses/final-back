@@ -1,7 +1,4 @@
-const {sequelize, Offer, Product, User} = require('../models/index.js');
-let jwt = require('jsonwebtoken');
-let claveToken = "fdfdkjfd.sa#fjpdfjkl";
-const chalk = require('chalk');
+const {Offer, Product, User} = require('../models/index.js');
 let {decodeToken} = require('../controllers/User');
 
 /**
@@ -44,7 +41,7 @@ exports.setOffer = async(req, res) =>{
     let {productId, offerValue, createdAt, updatedAt} = req.body;
     try{
         msg = 'Score added.';
-        const newOffer = await Offer.create({ 
+        await Offer.create({ 
             sellerId:decodedToken.id, productId,offerValue, createdAt, updatedAt
         });
         res.status(200).json({message:"Good" + msg});

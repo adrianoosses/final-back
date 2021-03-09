@@ -76,7 +76,6 @@ const getUserByEmail = async(req, res) =>{
           email: email
         }
       });
-    console.log("fUser", fUser);
     return fUser;
 }
 
@@ -86,7 +85,6 @@ exports.getUserByGivenEmail = async(email) =>{
           email: email
         }
       });
-    console.log("fUser", fUser);
     return fUser;
 }
 
@@ -139,10 +137,10 @@ exports.getUsers = async(req, res) => {
 exports.login = async(req, res) =>{
     try{
         let password = req.body.password;
+        let testCode = req.headers.testcode;
         let usrLogin = await getUserByEmail(req, res);
         const isValid = bcrypt.compareSync(password, usrLogin[0].password, 6);
-
-        if(usrLogin && isValid){
+        if(usrLogin && isValid && (testCode === process.env.TEST_CODE)){
             let token = generateToken(usrLogin[0]);
             res.status(200).json({message:"Logged", token});
             return true;
