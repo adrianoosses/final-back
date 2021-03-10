@@ -1,6 +1,7 @@
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Chat extends Model {
     /**
@@ -11,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.User, { foreignKey: 'source' });
-      //this.belongsTo(models.User, {foreignKey: 'destination'});
+      // this.belongsTo(models.User, {foreignKey: 'destination'});
     }
-  };
+  }
   Chat.init({
     source: DataTypes.INTEGER,
     destination: DataTypes.INTEGER,
     chatDate: DataTypes.DATE,
-    message: DataTypes.STRING
+    message: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Chat',

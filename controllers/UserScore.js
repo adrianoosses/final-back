@@ -12,7 +12,7 @@ const getScoresByEmail = async (sellerEmail) => {
 			include: [{
 				model: User,
 				where: { email: sellerEmail },
-			}]
+			}],
 		});
 		return scores;
 	} catch (error) {
@@ -22,52 +22,49 @@ const getScoresByEmail = async (sellerEmail) => {
 };
 
 exports.getScore = async (req, res) => {
-	const score = '';
+	let score = '';
 	try {
 		score = await getScoresByEmail(req.query.email);
 		res.json(score);
 		return true;
 	} catch {
-		res.status(400).json({ "Error": score });
+		res.status(400).json({ error: score });
 		return false;
 	}
 };
 
 const scoredThisUser = async (userSend, userReceive) => {
-	let msg = '';
 	try {
-		msg = 'Score added.';
 		const score = await UserScore.findAll({
-			where: { userReceive, userSend }
+			where: { userReceive, userSend },
 		});
 		return !!score[0].length;
 	} catch {
 		return false;
 	}
-}
-
+};
 
 exports.addScore = async (req, res) => {
 	let msg = '';
 	const decodedToken = decodeToken(req.headers.authorization);
-	const { userReceive, uScore, createdAt, updatedAt } = req.body;
-	if (decodedToken.id == userReceive) return res.status(401).json({ error: "Cannot set score yourself" });
+	const {
+		userReceive, uScore, createdAt, updatedAt,
+	} = req.body;
+	if (decodedToken.id === userReceive) return res.status(401).json({ error: 'Cannot set score yourself' });
 	if (await scoredThisUser(decodedToken.id, userReceive)) {
 		return res.status(401).json({ error: 'You scored this user already' });
 	}
-	/*let q2 = `INSERT INTO Images (productId, path, createdAt, updatedAt) 
-		VALUES((SELECT MAX(id) FROM Products), ?, ?, ?);`;*/
-
+	/* let q2 = `INSERT INTO Images (productId, path, createdAt, updatedAt)
+		VALUES((SELECT MAX(id) FROM Products), ?, ?, ?);`; */
 	try {
 		const newUserScore = await UserScore.create({
-			sellerId: decodedToken.id, userReceive, uScore, createdAt, updatedAt
+			sellerId: decodedToken.id, userReceive, uScore, createdAt, updatedAt,
 		});
 		msg = 'Score added.';
 		res.status(200).json({ message: `Good: ${msg}` });
 		return newUserScore;
 	} catch {
-		res.status(400)
-			.json({ error: "Wrong" });
+		res.status(400).json({ error: 'Wrong' });
 		return false;
 	}
 };

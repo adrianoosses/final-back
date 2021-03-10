@@ -1,8 +1,8 @@
 const express = require('express');
-const app = express();
+
 const router = express.Router();
-const {setFavorite, getFavorite, deleteProductFavorite} = require('../controllers/ProductFavorite.js');
-const {simpleAuth} = require('../controllers/middlewares/Auth');
+const { setFavorite, getFavorite, deleteProductFavorite } = require('../controllers/ProductFavorite.js');
+const { simpleAuth } = require('../controllers/middlewares/Auth');
 /**
  * ProductFavorite routes
  */

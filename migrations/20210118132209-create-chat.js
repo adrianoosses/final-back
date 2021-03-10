@@ -26,10 +26,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-      }
+      },
     });
   },
   down: async (queryInterface) => {
     await queryInterface.dropTable('Chats');
-  }
+  },
 };

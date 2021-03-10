@@ -1,6 +1,7 @@
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class UserScore extends Model {
     /**
@@ -13,11 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, { foreignKey: 'userSend' });
       this.belongsTo(models.User, { foreignKey: 'userReceive' });
     }
-  };
+  }
   UserScore.init({
     userSend: DataTypes.INTEGER,
     userReceive: DataTypes.INTEGER,
-    uScore: DataTypes.INTEGER
+    uScore: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'UserScore',

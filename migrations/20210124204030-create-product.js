@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Products', {
@@ -27,22 +26,22 @@ module.exports = {
         type: Sequelize.DATE,
       },
       productStatus: {
-        type: Sequelize.ENUM('New', 'Used')
+        type: Sequelize.ENUM('New', 'Used'),
       },
       category: {
-        type: Sequelize.ENUM('Book', 'Multimedia', 'Videogame', 'Home', 'Fashion', 'Vehicle')
+        type: Sequelize.ENUM('Book', 'Multimedia', 'Videogame', 'Home', 'Fashion', 'Vehicle'),
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface) => {
     await queryInterface.dropTable('Products');
-  }
+  },
 };

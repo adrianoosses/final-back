@@ -3,32 +3,29 @@ const { decodeToken, userHasProduct } = require('../User');
  * User auth middleware
  */
 exports.auth = (req, res, next) => {
-    try{
-        if((!!req.query.email) && (!!decodeToken(req.headers.authorization))){
+    try {
+        if ((!!req.query.email) && (!!decodeToken(req.headers.authorization))) {
             const token = req.headers.authorization;
-            const email = req.query.email;
+            const { email } = req.query;
             const decodedToken = decodeToken(token);
-            if (decodedToken.email === email) next();
-            else return res.token.status(400).json({ error: 'Error' }); 
-        } else {
-            return res.status(400).json({ error: 'Error' });
+            if (decodedToken.email === email) return next();
+            return res.token.status(400).json({ error: 'Error' });
         }
-    } catch (error){
+        return res.status(400).json({ error: 'Error' });
+    } catch (error) {
         return res.status(400).json({ error });
     }
-}
+};
 
 /**
  * Check only if user is signed in
  */
 exports.simpleAuth = (req, res, next) => {
     try {
-        if (decodeToken(req.headers.authorization)) {
-            next(); 
-        }    
-        else return res.status(401).json({error:error})
-    } catch (error){
-        return res.status(402).json({error:error});
+        if (decodeToken(req.headers.authorization)) return next();
+        return res.status(401).json({ error: 'error' });
+    } catch (error) {
+        return res.status(402).json({ error });
     }
 };
 
@@ -39,17 +36,16 @@ exports.authChat = (req, res, next) => {
     try {
         if ((!!req.query.srcemail) && (!!decodeToken(req.headers.authorization))) {
             const token = req.headers.authorization;
-            let email = req.query.srcemail;
-            let decodedToken = decodeToken(token);
-            if(decodedToken.email === email) next();
-            else return res.token.status(400).json({error:"Error"}); 
-        } else {
-            return res.status(400).json({error:"Error"});
+            const email = req.query.srcemail;
+            const decodedToken = decodeToken(token);
+            if (decodedToken.email === email) return next();
+            return res.token.status(400).json({ error: 'Error' });
         }
+        return res.status(400).json({ error: 'Error' });
     } catch (error) {
-        return res.status(400).json({error:error});
+        return res.status(400).json({ error });
     }
-}
+};
 
 /**
  * Chat middleware send
@@ -57,17 +53,14 @@ exports.authChat = (req, res, next) => {
 exports.authChatSend = (req, res, next) => {
     try {
         if ((!!req.body.source) && (!!decodeToken(req.headers.authorization))) {
-            const token = req.headers.authorization;
-            let srcId = req.body;
-            if(decodeToken(req.headers.authorization).id === req.body.source) next();
-            else return res.token.status(400).json({error:"Error"}); 
-        } else {
-            return res.status(400).json({error:"Error"});
+            if (decodeToken(req.headers.authorization).id === req.body.source) return next();
+            return res.token.status(400).json({ error: 'Error' });
         }
-    } catch(error) {
-        return res.status(400).json({error:error});
+        return res.status(400).json({ error: 'Error' });
+    } catch (error) {
+        return res.status(400).json({ error });
     }
-}
+};
 
 /**
  * Product auth middleware
@@ -75,31 +68,28 @@ exports.authChatSend = (req, res, next) => {
 exports.authProduct = (req, res, next) => {
     if (req.query.id) {
         const token = req.headers.authorization;
-        if(decodeToken(token)){ 
-            let productId = req.query.id;
-            let decodedToken = decodeToken(token);
-            if(userHasProduct(decodedToken.id, productId)) next(); 
-            else return res.status(400).json({ error:"Error" }); 
-        } else {
-            return res.status(400).json({ error:"Error" });
-        }
-    } else {
-        return res.status(400).json({ error:"Error" });
+        if (decodeToken(token)) {
+            const productId = req.query.id;
+            const decodedToken = decodeToken(token);
+            if (userHasProduct(decodedToken.id, productId)) return next();
+            return res.status(400).json({ error: 'Error' });
+		}
+        return res.status(400).json({ error: 'Error' });
     }
-}
+    return res.status(400).json({ error: 'Error' });
+};
 
 exports.authOffer = (req, res, next) => {
-    const token = req.headers.authorization; 
-    if (decodeToken(token)) { 
-        let productId = req.query.productid;
-        let decodedToken = decodeToken(token);
-        if (userHasProduct(decodedToken.id, productId)) next(); 
-        else return res.status(400).json({ error:"Error" }); 
-    }else{
-        return res.status(400).json({ error:"Error" });
+    const token = req.headers.authorization;
+    if (decodeToken(token)) {
+        const productId = req.query.productid;
+        const decodedToken = decodeToken(token);
+        if (userHasProduct(decodedToken.id, productId)) return next();
+        return res.status(400).json({ error: 'Error' });
     }
-}
+	return res.status(400).json({ error: 'Error' });
+};
 
 exports.guessAuth = (req, res, next) => {
     next();
-}
+};

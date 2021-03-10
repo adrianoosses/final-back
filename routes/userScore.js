@@ -1,8 +1,8 @@
 const express = require('express');
-const app = express();
+
 const router = express.Router();
-const {addScore, getScore} = require('../controllers/UserScore.js');
-const {simpleAuth, guessAuth} = require('../controllers/middlewares/Auth');
+const { addScore, getScore } = require('../controllers/UserScore.js');
+const { simpleAuth, guessAuth } = require('../controllers/middlewares/Auth');
 /**
  * UserScore routes
  */

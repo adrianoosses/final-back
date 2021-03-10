@@ -1,6 +1,7 @@
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Offer extends Model {
     /**
@@ -10,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Product, { foreignKey: 'productId' })
-      this.belongsTo(models.User, { foreignKey: 'sellerId' })
+      this.belongsTo(models.Product, { foreignKey: 'productId' });
+      this.belongsTo(models.User, { foreignKey: 'sellerId' });
     }
-  };
+  }
   Offer.init({
     sellerId: DataTypes.INTEGER,
     productId: DataTypes.INTEGER,

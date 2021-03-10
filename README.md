@@ -12,7 +12,8 @@ Front part on: https://github.com/adrianoosses/final-front
 ## SET UP
 <a name="db"></a>
 ### Option 1: Heroku: https://mejorprecio-back.herokuapp.com
-[NOTE: if you're interested on test this application, you'll need a test code]
+[NOTE: if you want log in on this application, you'll need a test code. You should having it via CV. 
+In other case, contact me]
 ### Option 2: local
 1. Clone the repository into your machine 
 ```
@@ -25,6 +26,8 @@ DB_USERNAME=<your-data-base-user-name>
 DB_DATABASE=<your-data-base-name>
 DB_DIALECT=mysql
 DB_HOST=127.0.0.1
+TEST_CODE=<your-test-code>
+TOKEN_KEY=<your-token-key>
 ```
 3. Install the dependencies typing on terminal:
 ```

@@ -1,6 +1,7 @@
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class ProductFavorite extends Model {
     /**
@@ -14,10 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, { foreignKey: 'userId' });
     }
   }
-  
   ProductFavorite.init({
     productId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'ProductFavorite',

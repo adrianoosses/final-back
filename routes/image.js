@@ -1,9 +1,8 @@
 const express = require('express');
-const app = express();
+
 const router = express.Router();
-const {Chat} = require('../models/chat.js');
-const {addImage, getImages} = require('../controllers/Image.js');
-const {guessAuth} = require('../controllers/middlewares/Auth');
+const { addImage, getImages } = require('../controllers/Image.js');
+const { guessAuth } = require('../controllers/middlewares/Auth');
 
 /**
  * Image routes
